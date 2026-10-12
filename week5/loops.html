@@ -1,0 +1,157 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Loops Playground</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 650px;
+            margin: auto;
+        }
+
+        .card {
+            background: white;
+            padding: 22px;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px #00000010;
+        }
+
+        input, button {
+            padding: 9px;
+            margin: 5px;
+            border-radius: 6px;
+            border: 1px solid #cbd5e1;
+        }
+
+        button {
+            background: #2563eb;
+            color: white;
+            cursor: pointer;
+        }
+
+        pre {
+            background: #172033;
+            color: #86efac;
+            padding: 15px;
+            border-radius: 8px;
+            min-height: 50px;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <h1>JavaScript Loops Playground</h1>
+
+    <div class="card">
+        <h2>1. Repeat Steps</h2>
+
+        <label>Number of repetitions:</label>
+        <input type="number" id="count"
+               min="1" max="20" value="5">
+
+        <button onclick="runSteps()">Run Loop</button>
+
+        <pre id="stepOutput"></pre>
+    </div>
+
+    <div class="card">
+        <h2>2. Loop Through Fruits</h2>
+
+        <input type="text" id="fruitInput"
+               placeholder="Enter a fruit">
+
+        <button onclick="addFruit()">Add Fruit</button>
+
+        <button onclick="runFruits()">Run Loop</button>
+
+        <p id="fruitList"></p>
+
+        <pre id="fruitOutput"></pre>
+    </div>
+
+</div>
+
+<script>
+    // Repeat a loop
+    function runSteps() {
+        let count = Number(document.getElementById("count").value);
+
+        if (count < 1 || count > 20 || !Number.isInteger(count)) {
+            document.getElementById("stepOutput").textContent =
+                "Enter a whole number from 1 to 20.";
+            return;
+        }
+
+        let output = "";
+
+        for (let i = 1; i <= count; i++) {
+            output += "Step " + i + "\n";
+        }
+
+        document.getElementById("stepOutput").textContent = output;
+    }
+
+    // Array of fruits
+    let fruits = ["apple", "banana", "cherry"];
+
+    function showFruits() {
+        document.getElementById("fruitList").innerHTML = "";
+
+        fruits.forEach(function(fruit, index) {
+            let button = document.createElement("button");
+            button.textContent = "Remove " + fruit;
+
+            button.onclick = function() {
+                fruits.splice(index, 1);
+                showFruits();
+                runFruits();
+            };
+
+            document.getElementById("fruitList").appendChild(button);
+        });
+    }
+
+    function addFruit() {
+        let input = document.getElementById("fruitInput");
+        let fruit = input.value.trim();
+
+        if (fruit !== "") {
+            fruits.push(fruit);
+            input.value = "";
+            showFruits();
+            runFruits();
+        }
+    }
+
+    function runFruits() {
+        let output = "";
+
+        for (let fruit of fruits) {
+            output += fruit + "\n";
+        }
+
+        document.getElementById("fruitOutput").textContent =
+            output || "No fruits in the array.";
+    }
+
+    // Initial output
+    runSteps();
+    showFruits();
+    runFruits();
+</script>
+
+</body>
+</html>
