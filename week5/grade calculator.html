@@ -1,0 +1,53 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Grade Checker</title>
+</head>
+<body>
+
+    <h1>Grade Checker</h1>
+
+    <label>Adjust your score:</label>
+
+    <input type="range" id="score"
+           min="0" max="100" value="75"
+           oninput="checkGrade()">
+
+    <input type="number" id="number"
+           min="0" max="100" value="75"
+           oninput="checkGrade()">
+
+    <h2>Grade: <span id="grade">C</span></h2>
+
+    <script>
+        function checkGrade() {
+            let score = Number(document.getElementById("score").value);
+
+            if (document.activeElement.id === "number") {
+                score = Number(document.getElementById("number").value);
+            }
+
+            score = Math.max(0, Math.min(100, score));
+
+            document.getElementById("score").value = score;
+            document.getElementById("number").value = score;
+
+            let result;
+
+            if (score >= 90) {
+                result = "A";
+            } else if (score >= 80) {
+                result = "B";
+            } else if (score >= 70) {
+                result = "C";
+            } else {
+                result = "F";
+            }
+
+            document.getElementById("grade").textContent = result;
+        }
+    </script>
+
+</body>
+</html>
