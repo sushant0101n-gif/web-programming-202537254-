@@ -1,0 +1,98 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Counter Mini-App</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: white;
+            padding: 35px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 20px #00000015;
+            width: 300px;
+        }
+
+        h1 {
+            color: #1e293b;
+        }
+
+        #count {
+            font-size: 60px;
+            font-weight: bold;
+            margin: 25px 0;
+            color: #2563eb;
+        }
+
+        button {
+            padding: 12px 18px;
+            margin: 5px;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .add {
+            background: #16a34a;
+        }
+
+        .subtract {
+            background: #dc2626;
+        }
+
+        .reset {
+            background: #64748b;
+        }
+
+        button:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Counter App</h1>
+
+        <div>Current Count</div>
+        <div id="count">0</div>
+
+        <button class="add" onclick="change(1)">+ Add</button>
+        <button class="subtract" onclick="change(-1)">− Subtract</button>
+        <br>
+        <button class="reset" onclick="reset()">Reset</button>
+    </div>
+
+    <script>
+        let count = 0;
+
+        function change(amount) {
+            count = count + amount;
+
+            document.getElementById("count").textContent = count;
+        }
+
+        function reset() {
+            count = 0;
+
+            document.getElementById("count").textContent = count;
+        }
+    </script>
+
+</body>
+</html>
