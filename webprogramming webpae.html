@@ -451,43 +451,6 @@
     </footer>
   </div>
 
-  <script>
-    const searchInput = document.querySelector("#project-search");
-    const weeks = [...document.querySelectorAll("[data-week]")];
-    const resultCount = document.querySelector("#result-count");
-    const emptyState = document.querySelector("#empty-state");
-
-    function filterProjects() {
-      const query = searchInput.value.trim().toLowerCase();
-      let visibleWeeks = 0;
-      let visibleProjects = 0;
-
-      for (const week of weeks) {
-        const weekMatches = week.querySelector(".week-title").textContent.toLowerCase().includes(query);
-        let weekProjectCount = 0;
-
-        for (const link of week.querySelectorAll(".task-link")) {
-          const matches = !query || weekMatches || link.textContent.toLowerCase().includes(query);
-          link.hidden = !matches;
-          if (matches) weekProjectCount++;
-        }
-
-        week.hidden = weekProjectCount === 0;
-        if (weekProjectCount > 0) {
-          visibleWeeks++;
-          visibleProjects += weekProjectCount;
-          if (query) week.open = true;
-        } else if (query) {
-          week.open = false;
-        }
-      }
-
-      emptyState.style.display = visibleProjects ? "none" : "block";
-      resultCount.textContent = `${visibleProjects} projects · ${visibleWeeks} weeks`;
-    }
-
-    searchInput.addEventListener("input", filterProjects);
-    filterProjects();
-  </script>
+  <script src="project-index.js"></script>
 </body>
 </html>
