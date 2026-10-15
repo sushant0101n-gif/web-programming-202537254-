@@ -268,7 +268,7 @@
     }
 
     .task-link::after {
-      content: "↗";
+      content: "??;
       color: var(--green);
       font-size: 15px;
     }
@@ -354,10 +354,11 @@
           <label for="project-search">Find a project</label>
           <input id="project-search" type="search" placeholder="Search weeks or tasks..." autocomplete="off" />
         </div>
-        <div class="result-count" id="result-count" aria-live="polite">46 projects · 7 weeks</div>
+        <div class="result-count" id="result-count" aria-live="polite">46 projects &#183; 7 weeks</div>
       </div>
 
       <section class="week-list" id="week-list" aria-label="Course projects">
+        <!-- BEGIN GENERATED PROJECT LINKS -->
         <details class="week" data-week>
           <summary><span class="week-number">01</span><span class="week-title">Week 1</span><span class="week-count">8 projects</span><span class="chevron" aria-hidden="true"></span></summary>
           <div class="task-grid">
@@ -371,9 +372,8 @@
             <a class="task-link" href="week_1/task8.html">Task 8</a>
           </div>
         </details>
-
         <details class="week" data-week>
-          <summary><span class="week-number">02A</span><span class="week-title">Week 2 · Part 1</span><span class="week-count">8 projects</span><span class="chevron" aria-hidden="true"></span></summary>
+          <summary><span class="week-number">02A</span><span class="week-title">Week 2 &#183; Part 1</span><span class="week-count">8 projects</span><span class="chevron" aria-hidden="true"></span></summary>
           <div class="task-grid">
             <a class="task-link" href="week2_1/task2.html">Task 2</a>
             <a class="task-link" href="week2_1/task3.html">Task 3</a>
@@ -385,9 +385,8 @@
             <a class="task-link" href="week2_1/trial.html">Trial page</a>
           </div>
         </details>
-
         <details class="week" data-week>
-          <summary><span class="week-number">02B</span><span class="week-title">Week 2 · Part 2</span><span class="week-count">8 projects</span><span class="chevron" aria-hidden="true"></span></summary>
+          <summary><span class="week-number">02B</span><span class="week-title">Week 2 &#183; Part 2</span><span class="week-count">8 projects</span><span class="chevron" aria-hidden="true"></span></summary>
           <div class="task-grid">
             <a class="task-link" href="week2_2/task1.html">Task 1</a>
             <a class="task-link" href="week2_2/task2.html">Task 2</a>
@@ -399,9 +398,8 @@
             <a class="task-link" href="week2_2/task8.html">Task 8</a>
           </div>
         </details>
-
         <details class="week" data-week>
-          <summary><span class="week-number">03A</span><span class="week-title">Week 3 · Part 1</span><span class="week-count">8 projects</span><span class="chevron" aria-hidden="true"></span></summary>
+          <summary><span class="week-number">03A</span><span class="week-title">Week 3 &#183; Part 1</span><span class="week-count">8 projects</span><span class="chevron" aria-hidden="true"></span></summary>
           <div class="task-grid">
             <a class="task-link" href="week3_1/task1.html">Task 1</a>
             <a class="task-link" href="week3_1/task2.html">Task 2</a>
@@ -413,9 +411,8 @@
             <a class="task-link" href="week3_1/task8.html">Task 8</a>
           </div>
         </details>
-
         <details class="week" data-week>
-          <summary><span class="week-number">03B</span><span class="week-title">Week 3 · Part 2</span><span class="week-count">7 projects</span><span class="chevron" aria-hidden="true"></span></summary>
+          <summary><span class="week-number">03B</span><span class="week-title">Week 3 &#183; Part 2</span><span class="week-count">7 projects</span><span class="chevron" aria-hidden="true"></span></summary>
           <div class="task-grid">
             <a class="task-link" href="week3_2/task1.html">Task 1</a>
             <a class="task-link" href="week3_2/task2.html">Task 2</a>
@@ -426,9 +423,8 @@
             <a class="task-link" href="week3_2/task7.html">Task 7</a>
           </div>
         </details>
-
         <details class="week" data-week>
-          <summary><span class="week-number">04</span><span class="week-title">Week 4 · Part 1</span><span class="week-count">4 projects</span><span class="chevron" aria-hidden="true"></span></summary>
+          <summary><span class="week-number">04</span><span class="week-title">Week 4 &#183; Part 1</span><span class="week-count">4 projects</span><span class="chevron" aria-hidden="true"></span></summary>
           <div class="task-grid">
             <a class="task-link" href="week4_1/task1.html">Task 1</a>
             <a class="task-link" href="week4_1/task2.html">Task 2</a>
@@ -436,7 +432,6 @@
             <a class="task-link" href="week4_1/task4.html">Task 4</a>
           </div>
         </details>
-
         <details class="week" data-week>
           <summary><span class="week-number">05</span><span class="week-title">Week 5</span><span class="week-count">3 projects</span><span class="chevron" aria-hidden="true"></span></summary>
           <div class="task-grid">
@@ -444,7 +439,7 @@
             <a class="task-link" href="week5/grade%20calculator.html">Grade Calculator</a>
             <a class="task-link" href="week5/loops.html">Loops</a>
           </div>
-        </details>
+        </details>        <!-- END GENERATED PROJECT LINKS -->
       </section>
 
       <p class="empty-state" id="empty-state">No matching projects. Try a different search.</p>
@@ -452,7 +447,7 @@
 
     <footer>
       <span>Web Programming</span>
-      <span>Project index · 46 tasks</span>
+      <span id="footer-total">Project index &#183; 46 tasks</span>
     </footer>
   </div>
 
