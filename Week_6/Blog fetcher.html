@@ -1,0 +1,98 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Blog Post Explorer</title>
+<style>
+body{font-family:Arial;background:#eff6ff;color:#172554;margin:0;padding:25px}
+main{max-width:900px;margin:auto}
+h1{color:#2563eb}
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0}
+input,select,button{padding:12px;border-radius:8px;border:1px solid #bfdbfe;font-size:15px}
+input{flex:1;min-width:180px}
+button{background:#2563eb;color:white;cursor:pointer;border:0}
+button:disabled{opacity:.5}
+#posts{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:15px}
+article{background:white;padding:18px;border-radius:12px;border:1px solid #bfdbfe}
+article h2{font-size:18px;text-transform:capitalize;color:#1d4ed8}
+article p{line-height:1.5;color:#475569}
+#status{min-height:24px}
+</style>
+</head>
+<body>
+<main>
+<h1>📝 Blog Post Explorer</h1>
+<p>Explore blog posts using JSONPlaceholder API.</p>
+<div class="controls">
+<input id="search" placeholder="Search posts...">
+<select id="limit">
+<option value="10">10 posts</option>
+<option value="20">20 posts</option>
+<option value="50">50 posts</option>
+<option value="100">All posts</option>
+</select>
+<button id="load">Load Posts</button>
+</div>
+<p id="status">Loading posts...</p>
+<section id="posts"></section>
+</main>
+<script>
+const API="https://jsonplaceholder.typicode.com/posts";
+const postsEl=document.getElementById("posts");
+const statusEl=document.getElementById("status");
+const loadBtn=document.getElementById("load");
+let allPosts=[];
+
+async function loadPosts(){
+  loadBtn.disabled=true;
+  statusEl.textContent="Loading...";
+  postsEl.replaceChildren();
+  try{
+    const response=await fetch(API);
+    if(!response.ok) throw new Error("API request failed");
+    allPosts=await response.json();
+    renderPosts();
+  }catch(error){
+    statusEl.textContent="Unable to load posts. Check your internet and try again.";
+  }finally{
+    loadBtn.disabled=false;
+  }
+}
+
+function renderPosts(){
+  const query=document.getElementById("search").value.toLowerCase();
+  const limit=Number(document.getElementById("limit").value);
+  const results=allPosts.filter(post=>
+    (post.title+" "+post.body).toLowerCase().includes(query)
+  ).slice(0,limit);
+
+  postsEl.replaceChildren();
+  statusEl.textContent=`Showing ${results.length} of ${allPosts.length} posts.`;
+
+  if(!results.length){
+    statusEl.textContent="No matching posts found.";
+    return;
+  }
+
+  results.forEach(post=>{
+    const card=document.createElement("article");
+    const heading=document.createElement("h2");
+    const body=document.createElement("p");
+    const info=document.createElement("small");
+    heading.textContent=post.title;
+    body.textContent=post.body;
+    info.textContent=`Post #${post.id} | User ${post.userId}`;
+    card.append(info,heading,body);
+    postsEl.appendChild(card);
+  });
+}
+
+loadBtn.addEventListener("click",loadPosts);
+document.getElementById("search").addEventListener("input",renderPosts);
+document.getElementById("limit").addEventListener("change",renderPosts);
+loadPosts();
+</script>
+</body>
+</html>
