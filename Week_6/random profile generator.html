@@ -1,0 +1,98 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Random User Generator</title>
+<style>
+body{font-family:Arial;background:#ecfdf5;color:#064e3b;margin:0;padding:25px}
+main{max-width:950px;margin:auto}
+header{text-align:center}
+h1{color:#047857}
+.controls{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;margin:25px 0}
+select,button{padding:12px;border-radius:8px;font-size:15px}
+select{border:1px solid #a7f3d0}
+button{border:0;background:#059669;color:white;cursor:pointer}
+button:disabled{opacity:.5}
+#users{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
+.card{background:white;border:1px solid #a7f3d0;border-radius:15px;padding:20px;overflow-wrap:anywhere}
+.card img{display:block;width:100px;height:100px;border-radius:50%;margin:auto;object-fit:cover}
+.card h2{text-align:center;font-size:19px}
+.card p{color:#475569;line-height:1.5}
+#status{min-height:24px;text-align:center}
+</style>
+</head>
+<body>
+<main>
+<header>
+<h1>👤 Random User Generator</h1>
+<p>Generate random profiles with photos and contact details.</p>
+</header>
+<div class="controls">
+<label>Number of users:
+<select id="count">
+<option value="1">1</option>
+<option value="6" selected>6</option>
+<option value="9">9</option>
+<option value="12">12</option>
+</select>
+</label>
+<button id="generate">Generate Users</button>
+</div>
+<p id="status">Loading profiles...</p>
+<section id="users"></section>
+</main>
+<script>
+const usersEl=document.getElementById("users");
+const statusEl=document.getElementById("status");
+const button=document.getElementById("generate");
+
+async function loadUsers(){
+ button.disabled=true;
+ statusEl.textContent="Loading profiles...";
+ usersEl.replaceChildren();
+
+ try{
+  const count=document.getElementById("count").value;
+  const response=await fetch(`https://randomuser.me/api/?results=${count}`);
+  if(!response.ok)throw new Error("Request failed");
+  const data=await response.json();
+
+  data.results.forEach(user=>{
+   const card=document.createElement("article");
+   card.className="card";
+
+   const photo=document.createElement("img");
+   photo.src=user.picture.large;
+   photo.alt="Profile photo";
+
+   const name=document.createElement("h2");
+   name.textContent=`${user.name.first} ${user.name.last}`;
+
+   const email=document.createElement("p");
+   email.textContent="Email: "+user.email;
+
+   const phone=document.createElement("p");
+   phone.textContent="Phone: "+user.phone;
+
+   const location=document.createElement("p");
+   location.textContent=`Location: ${user.location.city}, ${user.location.country}`;
+
+   card.append(photo,name,email,phone,location);
+   usersEl.appendChild(card);
+  });
+
+  statusEl.textContent=`Successfully loaded ${data.results.length} profiles.`;
+ }catch(error){
+  statusEl.textContent="Could not load profiles. Check your internet and try again.";
+ }finally{
+  button.disabled=false;
+ }
+}
+
+button.addEventListener("click",loadUsers);
+loadUsers();
+</script>
+</body>
+</html>
