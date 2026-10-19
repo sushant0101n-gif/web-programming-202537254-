@@ -1,0 +1,211 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Search</title>
+
+    <style>
+        :root {
+            --dark: #1a2540;
+            --accent: #1a56db;
+            --bg: #f0f4ff;
+            --surf: #ffffff;
+            --border: #c8d4f0;
+            --text: #1a2340;
+            --muted: #5a6a8a;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: Inter, sans-serif;
+        }
+
+        header {
+            background: var(--dark);
+            text-align: center;
+            padding: 32px;
+        }
+
+        header h1 {
+            color: white;
+            margin: 0;
+        }
+
+        #search-section {
+            max-width: 600px;
+            margin: 32px auto;
+            padding: 0 16px;
+        }
+
+        #search-form {
+            display: flex;
+            gap: 10px;
+        }
+
+        #search-input {
+            flex: 1;
+            min-width: 0;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        #search-form button {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        #search-form button:hover {
+            background: #1447b3;
+        }
+
+        #results-section {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        #status {
+            color: var(--muted);
+            margin-top: 12px;
+        }
+
+        #results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .book-card {
+            background: var(--surf);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+
+        .book-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(26, 37, 64, 0.12);
+        }
+
+        .book-card img {
+            width: 100%;
+            display: block;
+        }
+
+        .card-body {
+            padding: 12px;
+        }
+
+        .card-body h3 {
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 1.4;
+            margin: 0;
+        }
+
+        .card-body p {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        @media (max-width: 480px) {
+            #search-form {
+                flex-direction: column;
+            }
+
+            #search-form button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>📚 Book Search</h1>
+    </header>
+
+    <main>
+        <section id="search-section">
+            <form id="search-form">
+                <input
+                    type="text"
+                    id="search-input"
+                    placeholder="Search books…"
+                    required
+                >
+                <button type="submit">Search</button>
+            </form>
+
+            <p id="status">Enter a book title to get started.</p>
+        </section>
+
+        <section id="results-section">
+            <h2>Results</h2>
+            <div id="results-grid"></div>
+        </section>
+    </main>
+
+    <script>
+        const form = document.getElementById('search-form');
+        const input = document.getElementById('search-input');
+        const status = document.getElementById('status');
+
+        async function searchBooks(query) {
+            const url = 'https://openlibrary.org/search.json?q='
+                + encodeURIComponent(query)
+                + '&limit=12';
+
+            try {
+                status.textContent = 'Searching for "' + query + '"...';
+
+                const res = await fetch(url);
+
+                if (!res.ok) {
+                    throw new Error('HTTP ' + res.status);
+                }
+
+                const data = await res.json();
+
+                console.log('Found:', data.numFound);
+                console.log('First book:', data.docs[0]);
+
+                status.textContent = 'Found ' + data.numFound
+                    + ' results for "' + query + '"';
+
+            } catch (error) {
+                console.error('Search error:', error);
+                status.textContent = 'Something went wrong. Please try again.';
+            }
+        }
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const query = input.value.trim();
+
+            if (query) {
+                searchBooks(query);
+            }
+        });
+    </script>
+</body>
+</html>
