@@ -46,6 +46,7 @@ header {
   justify-content: space-between;
   min-height: 78px;
   border-bottom: 1px solid var(--line);
+  gap: 18px;
 }
 
 .wordmark {
@@ -76,6 +77,43 @@ header {
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.top-proposal {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: 0 16px;
+  border: 1px solid var(--green);
+  border-radius: 999px;
+  background: var(--green);
+  color: var(--white);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  text-transform: uppercase;
+  box-shadow: 0 10px 20px rgb(36 88 67 / 14%);
+  transition: transform 150ms ease, box-shadow 150ms ease, background 150ms ease;
+}
+
+.top-proposal::after {
+  content: "↗";
+  margin-left: 8px;
+  font-size: 15px;
+}
+
+.top-proposal:hover {
+  transform: translateY(-1px);
+  background: #1a3c2e;
+  box-shadow: 0 14px 24px rgb(36 88 67 / 18%);
 }
 
 main { padding: 70px 0 88px; }
@@ -433,6 +471,7 @@ footer {
     min-height: 72px;
   }
   .week-title { font-size: 21px; }
+  .header-actions { display: none; }
 }
 
 @media (max-width: 420px) {
@@ -459,6 +498,9 @@ footer {
   <div class="wordmark">
     <span class="mark" aria-hidden="true">W</span>
     Web Programming
+  </div>
+  <div class="header-actions">
+    <a class="top-proposal" href="https://sushant0101n-gif.github.io/team-4-project/proposal/index.html" target="_blank" rel="noopener noreferrer">Project Proposal</a>
   </div>
   <div class="top-note">Coursework archive · live</div>
 </header>
