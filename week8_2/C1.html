@@ -1,0 +1,92 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Username Validation</title>
+  <style>
+    body {
+      font-family: system-ui;
+      padding: 28px;
+      max-width: 400px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid #c8d4f0;
+      border-radius: 8px;
+      outline: none;
+      box-sizing: border-box;
+    }
+
+    input.valid {
+      border-color: #16a34a;
+      background: #f0fdf4;
+    }
+
+    input.invalid {
+      border-color: #dc2626;
+      background: #fef2f2;
+    }
+
+    #username-err {
+      color: red;
+      font-size: 12px;
+      display: block;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Username Validation</h2>
+
+  <div class="field-group">
+    <label for="username">Username</label>
+
+    <input type="text" id="username" required
+      aria-describedby="username-err"
+      aria-invalid="false"
+      placeholder="At least 3 alphanumeric chars">
+
+    <span id="username-err" role="alert"></span>
+  </div>
+
+  <script>
+    const usernameInput = document.getElementById('username');
+    const usernamePattern = /^[a-zA-Z0-9]{3,}$/;
+    const errorMsg = document.getElementById('username-err');
+
+    function validateUsername(input) {
+      if (input.value === '') {
+        input.classList.remove('valid', 'invalid');
+        input.setAttribute('aria-invalid', 'false');
+        errorMsg.textContent = '';
+      } else if (usernamePattern.test(input.value)) {
+        input.classList.add('valid');
+        input.classList.remove('invalid');
+        input.setAttribute('aria-invalid', 'false');
+        errorMsg.textContent = '';
+      } else {
+        input.classList.add('invalid');
+        input.classList.remove('valid');
+        input.setAttribute('aria-invalid', 'true');
+        errorMsg.textContent =
+          'Username must be at least 3 alphanumeric characters.';
+      }
+    }
+
+    usernameInput.addEventListener('input', function() {
+      validateUsername(usernameInput);
+    });
+  </script>
+
+</body>
+</html>

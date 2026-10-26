@@ -1,0 +1,156 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Password Confirmation</title>
+  <style>
+    body {
+      font-family: system-ui;
+      padding: 28px;
+      max-width: 400px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-top: 16px;
+      margin-bottom: 5px;
+    }
+
+    input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 10px;
+      border: 2px solid #c8d4f0;
+      border-radius: 8px;
+      outline: none;
+    }
+
+    input.valid {
+      border-color: #16a34a;
+    }
+
+    input.invalid {
+      border-color: #dc2626;
+    }
+
+    .error {
+      display: block;
+      color: #dc2626;
+      font-size: 12px;
+      margin-top: 4px;
+      min-height: 18px;
+    }
+
+    button {
+      margin-top: 18px;
+      padding: 11px 24px;
+      background: #1a56db;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Create Account</h2>
+
+  <form id="password-form">
+    <label for="password">Password</label>
+    <input
+      type="password"
+      id="password"
+      required
+      minlength="8"
+      aria-describedby="password-error"
+      aria-invalid="false"
+      placeholder="At least 8 characters"
+    >
+    <span id="password-error" class="error" aria-live="polite"></span>
+
+    <label for="confirm-password">Confirm Password</label>
+    <input
+      type="password"
+      id="confirm-password"
+      required
+      aria-describedby="confirm-error"
+      aria-invalid="false"
+      placeholder="Repeat your password"
+    >
+    <span id="confirm-error" class="error" aria-live="polite"></span>
+
+    <button type="submit">Create Account</button>
+  </form>
+
+  <script>
+    const password = document.getElementById('password');
+    const confirmPassword = document.getElementById('confirm-password');
+    const passwordError = document.getElementById('password-error');
+    const confirmError = document.getElementById('confirm-error');
+    const form = document.getElementById('password-form');
+
+    function validatePassword() {
+      if (password.value.length < 8) {
+        password.classList.add('invalid');
+        password.classList.remove('valid');
+        password.setAttribute('aria-invalid', 'true');
+        passwordError.textContent =
+          'Password must be at least 8 characters.';
+      } else {
+        password.classList.add('valid');
+        password.classList.remove('invalid');
+        password.setAttribute('aria-invalid', 'false');
+        passwordError.textContent = '';
+      }
+    }
+
+    function validateConfirm() {
+      if (confirmPassword.value === '') {
+        confirmPassword.setCustomValidity('');
+        confirmPassword.classList.remove('valid', 'invalid');
+        confirmPassword.setAttribute('aria-invalid', 'false');
+        confirmError.textContent = '';
+      } else if (confirmPassword.value !== password.value) {
+        confirmPassword.setCustomValidity('Passwords do not match.');
+        confirmPassword.classList.add('invalid');
+        confirmPassword.classList.remove('valid');
+        confirmPassword.setAttribute('aria-invalid', 'true');
+        confirmError.textContent = 'Passwords do not match.';
+      } else {
+        confirmPassword.setCustomValidity('');
+        confirmPassword.classList.add('valid');
+        confirmPassword.classList.remove('invalid');
+        confirmPassword.setAttribute('aria-invalid', 'false');
+        confirmError.textContent = '';
+      }
+    }
+
+    password.addEventListener('input', function() {
+      validatePassword();
+
+      if (confirmPassword.value !== '') {
+        validateConfirm();
+      }
+    });
+
+    confirmPassword.addEventListener('input', validateConfirm);
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      validatePassword();
+      validateConfirm();
+
+      if (form.checkValidity()) {
+        alert('Passwords are valid! Account created.');
+        console.log('submitted');
+      }
+    });
+  </script>
+
+</body>
+</html>
