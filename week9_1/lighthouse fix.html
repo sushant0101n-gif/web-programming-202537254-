@@ -51,22 +51,18 @@
 
 <h2>Sign Up</h2>
 
-<!-- Fix 1: Accessible name for icon button -->
+<!-- Issue 1: Added accessible name -->
 <button type="button" class="icon-btn" aria-label="Search">
   🔍
 </button>
 
-<!-- Fix 2: Proper label for email input -->
-<label for="email-field">Email address:</label>
-<input
-  type="email"
-  id="email-field"
-  placeholder="Email address"
-  aria-describedby="email-error"
->
+<!-- Issue 2: Added label element -->
+<label for="email-field">Email address</label>
+<input type="email" id="email-field"
+       placeholder="Email address">
 
-<!-- Fix 3: Error messages include text, not just color -->
-<div class="error" id="email-error">
+<!-- Issue 3: Added visible error text marker -->
+<div class="error">
   Error: Please enter a valid email address.
 </div>
 
@@ -78,13 +74,11 @@
   Create account
 </button>
 
-<!-- Fix 4: Meaningful alt text for linked image -->
+<!-- Issue 4: Replaced generic alt text -->
 <a href="/about" style="margin-top:16px; display:inline-block">
-  <img
-    src=""
-    alt="About our university"
-    style="background:#e0eaff;width:80px;height:40px;border-radius:4px"
-  >
+  <img src=""
+       alt="About our university"
+       style="background:#e0eaff;width:80px;height:40px;border-radius:4px">
 </a>
 
 </body>
