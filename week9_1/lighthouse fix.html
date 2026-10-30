@@ -1,0 +1,73 @@
+
+<!DOCTYPE html>
+<html>
+<body style="font-family:system-ui;padding:24px;max-width:400px">
+
+<style>
+  input {
+    width:100%;
+    padding:8px;
+    border:2px solid #ccc;
+    border-radius:6px;
+    font-size:15px;
+    margin-bottom:4px;
+  }
+
+  .error {
+    color:red;
+    font-size:13px;
+  }
+
+  button {
+    padding:8px 16px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+  }
+
+  .icon-btn {
+    background:#1a7f5a;
+    color:white;
+    width:36px;
+    height:36px;
+    font-size:18px;
+    border-radius:50%;
+  }
+
+  .submit-btn {
+    background:#1a56db;
+    color:white;
+    padding:10px 24px;
+    font-size:15px;
+    width:100%;
+    margin-top:8px;
+  }
+
+  a img {
+    display:block;
+    width:80px;
+  }
+</style>
+
+<h2>Sign Up</h2>
+
+<!-- Issue 1: Added accessible name -->
+<button class="icon-btn" aria-label="Search">🔍</button>
+
+<!-- Issue 2: Added a label -->
+<label for="email-field">Email address</label>
+<input type="email" placeholder="Email address" id="email-field">
+
+<!-- Issue 3: Added text marker -->
+<div class="error">Error: Please enter a valid email address.</div>
+<div class="error">Error: Password too short.</div>
+
+<button class="submit-btn">Create account</button>
+
+<!-- Issue 4: Descriptive alt text -->
+<a href="/about" style="margin-top:16px; display:inline-block">
+  <img src="" alt="Learn more about our university" style="background:#e0eaff;width:80px;height:40px;border-radius:4px">
+</a>
+
+</body>
+</html>
