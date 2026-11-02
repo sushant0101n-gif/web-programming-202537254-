@@ -1,0 +1,537 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Lighthouse performance optimization report for Team 4 Student Budget Tracker.">
+  <title>Lighthouse Performance Report | Student Budget Tracker</title>
+
+  <style>
+    :root {
+      --primary: #15803d;
+      --primary-light: #dcfce7;
+      --dark: #172033;
+      --text: #334155;
+      --muted: #64748b;
+      --bg: #f8fafc;
+      --white: #ffffff;
+      --border: #e2e8f0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    .container {
+      max-width: 950px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    header {
+      background: var(--dark);
+      color: white;
+      padding: 40px 30px;
+      border-radius: 16px;
+      margin-bottom: 25px;
+    }
+
+    header .tag {
+      display: inline-block;
+      background: var(--primary);
+      color: white;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      margin-bottom: 15px;
+    }
+
+    header h1 {
+      font-size: 30px;
+      margin-bottom: 10px;
+    }
+
+    header p {
+      color: #cbd5e1;
+    }
+
+    .project-info {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin-top: 25px;
+    }
+
+    .info-item {
+      background: #263449;
+      padding: 12px;
+      border-radius: 8px;
+    }
+
+    .info-item strong {
+      display: block;
+      color: #94a3b8;
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+
+    .info-item span {
+      color: white;
+    }
+
+    .section {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 25px;
+      margin-bottom: 22px;
+    }
+
+    h2 {
+      color: var(--dark);
+      font-size: 21px;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--border);
+    }
+
+    h3 {
+      color: var(--dark);
+      margin: 20px 0 8px;
+      font-size: 17px;
+    }
+
+    p {
+      margin-bottom: 12px;
+    }
+
+    ul {
+      padding-left: 22px;
+      margin: 12px 0;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    .score-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin: 20px 0;
+    }
+
+    .score-card {
+      background: var(--primary-light);
+      border: 1px solid #bbf7d0;
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .score-card .score {
+      font-size: 42px;
+      font-weight: bold;
+      color: var(--primary);
+    }
+
+    .score-card p {
+      margin: 0;
+      color: var(--text);
+    }
+
+    .screenshot-container {
+      width: 100%;
+      margin: 18px 0 25px;
+      padding: 12px;
+      background: #f1f5f9;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+
+    .screenshot-container img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 7px;
+    }
+
+    .screenshot-label {
+      font-weight: bold;
+      color: var(--dark);
+      margin-bottom: 8px;
+    }
+
+    .note {
+      background: #eff6ff;
+      border-left: 4px solid #3b82f6;
+      padding: 14px;
+      border-radius: 5px;
+      margin: 15px 0;
+    }
+
+    .optimization {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      padding: 15px;
+      border-radius: 8px;
+      margin: 12px 0;
+    }
+
+    .optimization strong {
+      color: var(--primary);
+    }
+
+    .reflection {
+      background: var(--primary-light);
+      padding: 18px;
+      border-radius: 8px;
+    }
+
+    .checklist li {
+      list-style: none;
+      margin-left: -22px;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      padding: 25px 10px 10px;
+      font-size: 14px;
+    }
+
+    .print-button {
+      display: block;
+      margin: 25px auto 35px;
+      padding: 12px 22px;
+      border: none;
+      border-radius: 8px;
+      background: var(--primary);
+      color: white;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    .print-button:hover {
+      background: #166534;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        margin: 20px auto;
+      }
+
+      header {
+        padding: 25px 20px;
+      }
+
+      header h1 {
+        font-size: 24px;
+      }
+
+      .project-info,
+      .score-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .section {
+        padding: 18px;
+      }
+    }
+
+    @media print {
+      body {
+        background: white;
+      }
+
+      .container {
+        max-width: 100%;
+        margin: 0;
+      }
+
+      .section,
+      header {
+        break-inside: avoid;
+      }
+
+      .print-button {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="container">
+
+    <header>
+      <span class="tag">Web Programming | Performance Optimization</span>
+
+      <h1>Student Budget Tracker</h1>
+
+      <p>Lighthouse Performance Audit and Optimization Report</p>
+
+      <div class="project-info">
+        <div class="info-item">
+          <strong>Project</strong>
+          <span>Team 4 - Student Budget Tracker</span>
+        </div>
+
+        <div class="info-item">
+          <strong>University</strong>
+          <span>Gachon University</span>
+        </div>
+
+        <div class="info-item">
+          <strong>Course</strong>
+          <span>Web Programming</span>
+        </div>
+
+        <div class="info-item">
+          <strong>Developer</strong>
+          <span>Neupane Sushant</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- 1. Introduction -->
+    <section class="section">
+      <h2>1. Introduction</h2>
+
+      <p>
+        The purpose of this task was to evaluate the performance of my
+        Student Budget Tracker website using Google Lighthouse and
+        improve its performance through code optimization.
+      </p>
+
+      <p>
+        I first checked the original website, reviewed Lighthouse
+        recommendations, applied several improvements, and then
+        performed another performance test.
+      </p>
+    </section>
+
+    <!-- 2. Before Optimization -->
+    <section class="section">
+      <h2>2. Before Optimization</h2>
+
+      <p>
+        I ran Lighthouse on the original deployed website to check
+        its initial performance.
+      </p>
+
+      <div class="score-grid">
+        <div class="score-card">
+          <div class="score">100</div>
+          <p>Initial Performance Score</p>
+        </div>
+      </div>
+
+      <p class="screenshot-label">
+        Screenshot 1: Original Lighthouse Performance Score
+      </p>
+
+      <div class="screenshot-container">
+        <img
+          src="screenshots/lighthouse-before.png"
+          alt="Original Lighthouse performance score before optimization"
+        >
+      </div>
+    </section>
+
+    <!-- 3. Issues -->
+    <section class="section">
+      <h2>3. Issues and Improvement Opportunities</h2>
+
+      <p>
+        During testing, I also performed a temporary local check to
+        examine Lighthouse recommendations and identify possible
+        performance improvements.
+      </p>
+
+      <p class="screenshot-label">
+        Screenshot 2: Temporary Lighthouse Performance Check
+      </p>
+
+      <div class="screenshot-container">
+        <img
+          src="screenshots/lighthouse-temporary-check.png"
+          alt="Temporary Lighthouse test showing a performance score of 87"
+        >
+      </div>
+
+      <p class="screenshot-label">
+        Screenshot 3: Lighthouse Errors and Opportunities
+      </p>
+
+      <div class="screenshot-container">
+        <img
+          src="screenshots/lighthouse-errors.png"
+          alt="Lighthouse report showing performance issues and improvement opportunities"
+        >
+      </div>
+
+      <h3>Issues Identified</h3>
+
+      <ul>
+        <li>Large image files could increase page loading time.</li>
+        <li>Some resources could delay the initial page rendering.</li>
+        <li>Repeated array filtering and calculations could be reduced.</li>
+        <li>Repeated DOM updates could be made more efficient.</li>
+        <li>Unnecessary visual effects could add rendering work.</li>
+      </ul>
+
+      <div class="note">
+        <strong>Note:</strong> The score of 87 was from a temporary
+        local test. It is not the official initial score. The official
+        deployed-site comparison is 100 before and 100 after.
+      </div>
+    </section>
+
+    <!-- 4. Optimizations -->
+    <section class="section">
+      <h2>4. Optimizations Applied</h2>
+
+      <p>
+        Based on the Lighthouse recommendations, I focused on
+        improving the HTML, JavaScript, and CSS of the website.
+      </p>
+
+      <div class="optimization">
+        <strong>1. Improved JavaScript Loading</strong>
+        <p>
+          I used the defer attribute for the JavaScript file so that
+          the browser can continue parsing the HTML before executing
+          the script.
+        </p>
+      </div>
+
+      <div class="optimization">
+        <strong>2. Reduced Repeated Calculations</strong>
+        <p>
+          I optimized repeated array filtering and calculations by
+          processing transaction data in a single loop where possible.
+        </p>
+      </div>
+
+      <div class="optimization">
+        <strong>3. Optimized DOM Updates</strong>
+        <p>
+          I used DocumentFragment to group transaction elements
+          before adding them to the page, reducing repeated DOM updates.
+        </p>
+      </div>
+
+      <div class="optimization">
+        <strong>4. Reduced Unnecessary Resources</strong>
+        <p>
+          I removed unused external libraries and unnecessary
+          large images to reduce extra resource loading.
+        </p>
+      </div>
+
+      <div class="optimization">
+        <strong>5. Simplified CSS Effects</strong>
+        <p>
+          I reduced unnecessary blur effects and continuous
+          animations to make the interface simpler and lighter.
+        </p>
+      </div>
+    </section>
+
+    <!-- 5. After Optimization -->
+    <section class="section">
+      <h2>5. After Optimization</h2>
+
+      <p>
+        After applying the improvements, I ran Lighthouse again
+        to check the performance of the website.
+      </p>
+
+      <div class="score-grid">
+        <div class="score-card">
+          <div class="score">100</div>
+          <p>Final Performance Score</p>
+        </div>
+      </div>
+
+      <p class="screenshot-label">
+        Screenshot 4: Final Lighthouse Performance Score
+      </p>
+
+      <div class="screenshot-container">
+        <img
+          src="screenshots/lighthouse-after.png"
+          alt="Final Lighthouse performance score after optimization"
+        >
+      </div>
+
+      <div class="note">
+        The official deployed website received a Performance score
+        of 100 both before and after optimization. The additional
+        local test helped me examine possible improvements, even
+        though the official score did not increase.
+      </div>
+    </section>
+
+    <!-- 6. Reflection -->
+    <section class="section">
+      <h2>6. Reflection</h2>
+
+      <div class="reflection">
+        <p>
+          Through this task, I learned how to use Google Lighthouse
+          to analyze website performance and identify possible
+          improvements. I also learned that optimizing JavaScript,
+          reducing unnecessary resources, and improving DOM updates
+          can help make a website more efficient.
+        </p>
+
+        <p>
+          Although the official Performance score remained at 100,
+          this activity helped me understand how to evaluate and
+          improve website code.
+        </p>
+      </div>
+    </section>
+
+    <!-- 7. Submission Checklist -->
+    <section class="section">
+      <h2>7. Submission Checklist</h2>
+
+      <ul class="checklist">
+        <li>✓ Original Lighthouse screenshot included</li>
+        <li>✓ Temporary performance check screenshot included</li>
+        <li>✓ Lighthouse issues screenshot included</li>
+        <li>✓ Final Lighthouse screenshot included</li>
+        <li>✓ At least three optimization methods explained</li>
+        <li>✓ Two-sentence description of changes included</li>
+      </ul>
+    </section>
+
+    <footer>
+      <p>Student Budget Tracker | Team 4</p>
+      <p>Web Programming - Gachon University</p>
+      <p>Prepared by Neupane Sushant</p>
+    </footer>
+
+    <!-- Print button at the very end -->
+    <button class="print-button" onclick="window.print()">
+      Print / Save as PDF
+    </button>
+
+  </main>
+
+</body>
+</html>
