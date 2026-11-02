@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Script Loading Example</title>
+
+  <!-- Load JavaScript files -->
+  <script src="app.js" defer></script>
+  <script src="analytics.js" async></script>
+
+  <!-- Run after the HTML is parsed -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const status = document.getElementById('status');
+
+      status.textContent = '✅ Page loaded successfully!';
+      status.className = 'status ok';
+    });
+  </script>
+</head>
+<body>
+  <h1>Script Loading Demo</h1>
+  <p id="status" class="status">Waiting for page to load...</p>
+</body>
+</html>
