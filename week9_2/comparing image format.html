@@ -1,0 +1,78 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Image Format Practice</title>
+
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      padding: 24px;
+      max-width: 500px;
+      margin: auto;
+      color: #172033;
+      background: #ffffff;
+    }
+
+    h2 {
+      color: #15803d;
+    }
+
+    picture img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+
+    p {
+      margin-top: 12px;
+      font-size: 13px;
+      color: #64748b;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h2>Image Format Practice</h2>
+
+  <!-- WebP format with JPEG fallback and responsive sizes -->
+  <picture>
+
+    <source
+      type="image/webp"
+      srcset="
+        https://picsum.photos/400/200.webp 400w,
+        https://picsum.photos/800/400.webp 800w
+      "
+      sizes="(max-width: 480px) 400px, 800px"
+    >
+
+    <img
+      src="https://picsum.photos/800/400"
+      srcset="
+        https://picsum.photos/400/200 400w,
+        https://picsum.photos/800/400 800w
+      "
+      sizes="(max-width: 480px) 400px, 800px"
+      alt="A scenic photograph displayed using responsive image formats"
+      width="800"
+      height="400"
+      fetchpriority="high"
+      decoding="async"
+    >
+
+  </picture>
+
+  <p>
+    This image uses WebP when supported by the browser and JPEG
+    as a fallback. The srcset attribute allows the browser to
+    select an appropriate image size depending on the screen.
+  </p>
+
+</body>
+</html>
