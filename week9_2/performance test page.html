@@ -148,6 +148,44 @@
       margin: 0;
     }
 
+    .tab-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      border-bottom: 1px solid var(--border);
+      margin: 20px 0;
+    }
+
+    .tab {
+      appearance: none;
+      background: transparent;
+      border: 0;
+      border-bottom: 3px solid transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font: inherit;
+      font-weight: 600;
+      margin-bottom: -1px;
+      padding: 10px 14px;
+    }
+
+    .tab[aria-selected="true"] {
+      border-bottom-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .tab:focus-visible {
+      border-radius: 4px;
+      outline: 3px solid #86efac;
+      outline-offset: 2px;
+    }
+
+    .tab-panel:focus-visible {
+      border-radius: 4px;
+      outline: 3px solid #86efac;
+      outline-offset: 3px;
+    }
+
     footer {
       text-align: center;
       color: var(--muted);
@@ -213,112 +251,164 @@
     decoding="async"
   >
 
-  <h2>YOUR FIXES:</h2>
+  <section class="results" aria-labelledby="results-title">
+    <h2 id="results-title">Performance Test Results</h2>
 
-  <p>
-    Add defer to the script, add loading="lazy" to below-fold
-    images, and add width and height attributes.
-  </p>
+    <div class="tab-list" role="tablist" aria-label="Performance report">
+      <button class="tab" id="tab-overview" type="button" role="tab"
+        aria-controls="panel-overview" aria-selected="true" tabindex="0">
+        Overview
+      </button>
+      <button class="tab" id="tab-metrics" type="button" role="tab"
+        aria-controls="panel-metrics" aria-selected="false" tabindex="-1">
+        Metrics
+      </button>
+      <button class="tab" id="tab-optimizations" type="button" role="tab"
+        aria-controls="panel-optimizations" aria-selected="false" tabindex="-1">
+        Optimizations
+      </button>
+      <button class="tab" id="tab-conclusion" type="button" role="tab"
+        aria-controls="panel-conclusion" aria-selected="false" tabindex="-1">
+        Conclusion
+      </button>
+    </div>
 
-  <!-- Lighthouse report -->
-  <section class="results">
-
-    <h2>Lighthouse Performance Results</h2>
-
-    <div class="score-box">
-
-      <div class="score-card">
-        <div class="score">74</div>
-        <div class="score-label">Original Score</div>
+    <section class="tab-panel" id="panel-overview" role="tabpanel"
+      aria-labelledby="tab-overview" tabindex="0">
+      <h2>Lighthouse Performance Results</h2>
+      <div class="score-box">
+        <div class="score-card">
+          <div class="score">74</div>
+          <div class="score-label">Original Score</div>
+        </div>
+        <div class="score-card">
+          <div class="score">92</div>
+          <div class="score-label">Optimized Score</div>
+        </div>
       </div>
+      <p class="improvement">Performance improved by 18 points!</p>
+      <h2>YOUR FIXES</h2>
+      <p>
+        Add defer to the script, add loading="lazy" to below-fold
+        images, and add width and height attributes.
+      </p>
+    </section>
 
-      <div class="score-card">
-        <div class="score">92</div>
-        <div class="score-label">Optimized Score</div>
+    <section class="tab-panel" id="panel-metrics" role="tabpanel"
+      aria-labelledby="tab-metrics" tabindex="0" hidden>
+      <h2>Worst Performance Metric</h2>
+      <p>
+        The worst metric identified in the original audit was
+        Cumulative Layout Shift (CLS).
+      </p>
+      <p><strong>Original CLS Value: 0.279</strong></p>
+      <p>
+        Lighthouse identified unsized image elements as the main
+        cause of layout shifts. The browser did not reserve space
+        for images before they loaded, causing page elements to move.
+      </p>
+      <div class="note">
+        <strong>Additional observation:</strong>
+        Lighthouse also identified LCP request discovery,
+        image delivery opportunities, and unused JavaScript.
+        The CLS value should be checked again after testing
+        this optimized version.
       </div>
+    </section>
 
-    </div>
+    <section class="tab-panel" id="panel-optimizations" role="tabpanel"
+      aria-labelledby="tab-optimizations" tabindex="0" hidden>
+      <h2>Optimizations Applied</h2>
+      <div class="fix">
+        <strong>1. JavaScript Loading</strong>
+        <p>
+          Added the defer attribute to the jQuery script to avoid
+          blocking HTML parsing.
+        </p>
+      </div>
+      <div class="fix">
+        <strong>2. Image Dimensions</strong>
+        <p>
+          Added explicit width and height attributes to all three
+          images to help prevent unexpected layout shifts.
+        </p>
+      </div>
+      <div class="fix">
+        <strong>3. Lazy Loading</strong>
+        <p>
+          Added loading="lazy" to the second and third images
+          because they appear further down the page.
+        </p>
+      </div>
+      <div class="fix">
+        <strong>4. Image Decoding</strong>
+        <p>
+          Added decoding="async" to allow images to be decoded
+          without unnecessarily delaying other rendering work.
+        </p>
+      </div>
+      <div class="fix">
+        <strong>5. Image Priority</strong>
+        <p>
+          Used fetchpriority="high" for the first image because
+          it may be visible when the page initially loads.
+        </p>
+      </div>
+    </section>
 
-    <p class="improvement">Performance improved by 18 points!</p>
-
-    <h2>Worst Performance Metric</h2>
-
-    <p>
-      The worst metric identified in the original audit was
-      Cumulative Layout Shift (CLS).
-    </p>
-
-    <p><strong>Original CLS Value: 0.279</strong></p>
-
-    <p>
-      Lighthouse identified unsized image elements as the main
-      cause of layout shifts. The browser did not reserve space
-      for images before they loaded, causing page elements to move.
-    </p>
-
-    <h2>Optimizations Applied</h2>
-
-    <div class="fix">
-      <strong>1. JavaScript Loading</strong>
-      <p>
-        Added the defer attribute to the jQuery script to avoid
-        blocking HTML parsing.
-      </p>
-    </div>
-
-    <div class="fix">
-      <strong>2. Image Dimensions</strong>
-      <p>
-        Added explicit width and height attributes to all three
-        images to help prevent unexpected layout shifts.
-      </p>
-    </div>
-
-    <div class="fix">
-      <strong>3. Lazy Loading</strong>
-      <p>
-        Added loading="lazy" to the second and third images
-        because they appear further down the page.
-      </p>
-    </div>
-
-    <div class="fix">
-      <strong>4. Image Decoding</strong>
-      <p>
-        Added decoding="async" to allow images to be decoded
-        without unnecessarily delaying other rendering work.
-      </p>
-    </div>
-
-    <div class="fix">
-      <strong>5. Image Priority</strong>
-      <p>
-        Used fetchpriority="high" for the first image because
-        it may be visible when the page initially loads.
-      </p>
-    </div>
-
-    <div class="note">
-      <strong>Additional observation:</strong>
-      Lighthouse also identified LCP request discovery,
-      image delivery opportunities, and unused JavaScript.
-      The CLS value should be checked again after testing
-      this optimized version.
-    </div>
-
-    <h2>Conclusion</h2>
-
-    <div class="conclusion">
-      <p>
-        After applying performance optimizations, my Lighthouse
-        Performance score increased from 74 to 92, an improvement
-        of 18 points. This task helped me understand how JavaScript
-        loading, image dimensions, and lazy loading can affect
-        website performance and user experience.
-      </p>
-    </div>
-
+    <section class="tab-panel" id="panel-conclusion" role="tabpanel"
+      aria-labelledby="tab-conclusion" tabindex="0" hidden>
+      <h2>Conclusion</h2>
+      <div class="conclusion">
+        <p>
+          After applying performance optimizations, my Lighthouse
+          Performance score increased from 74 to 92, an improvement
+          of 18 points. This task helped me understand how JavaScript
+          loading, image dimensions, and lazy loading can affect
+          website performance and user experience.
+        </p>
+      </div>
+    </section>
   </section>
+
+  <script>
+    const tabs = Array.from(document.querySelectorAll('[role="tab"]'));
+
+    function activateTab(tab, moveFocus) {
+      tabs.forEach((currentTab) => {
+        const selected = currentTab === tab;
+        currentTab.setAttribute("aria-selected", String(selected));
+        currentTab.tabIndex = selected ? 0 : -1;
+        document.getElementById(currentTab.getAttribute("aria-controls")).hidden = !selected;
+      });
+
+      if (moveFocus) {
+        tab.focus();
+      }
+    }
+
+    tabs.forEach((tab, index) => {
+      tab.addEventListener("click", () => activateTab(tab, false));
+      tab.addEventListener("keydown", (event) => {
+        let nextIndex;
+
+        if (event.key === "ArrowRight") {
+          nextIndex = (index + 1) % tabs.length;
+        } else if (event.key === "ArrowLeft") {
+          nextIndex = (index - 1 + tabs.length) % tabs.length;
+        } else if (event.key === "Home") {
+          nextIndex = 0;
+        } else if (event.key === "End") {
+          nextIndex = tabs.length - 1;
+        } else {
+          return;
+        }
+
+        event.preventDefault();
+        activateTab(tabs[nextIndex], true);
+      });
+    });
+  </script>
 
   <footer>
     Performance Practice Page | Web Programming
