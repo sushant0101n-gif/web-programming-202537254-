@@ -1,0 +1,255 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 — Page Not Found</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f5f5eb;
+            background-image: radial-gradient(#d9ddce 1px, transparent 1px);
+            background-size: 22px 22px;
+            color: #202c26;
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1120px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0 25px;
+            border-bottom: 1px solid #d5d9ce;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #205943;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        .logo span {
+            background: #c9e86b;
+            color: #205943;
+            border-radius: 50%;
+            width: 34px;
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: Georgia, serif;
+            font-size: 22px;
+        }
+
+        header p {
+            color: #65736a;
+            font-size: 13px;
+            letter-spacing: 1px;
+        }
+
+        .hero {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 40px;
+            margin: 100px 0 55px;
+        }
+
+        .error-text {
+            flex: 1;
+        }
+
+        .tag {
+            color: #e66c4d;
+            font-size: 13px;
+            letter-spacing: 2px;
+            font-weight: bold;
+            margin-bottom: 18px;
+        }
+
+        h1 {
+            font-family: Georgia, serif;
+            font-size: clamp(65px, 10vw, 110px);
+            line-height: 0.95;
+            font-weight: normal;
+        }
+
+        h1 span {
+            color: #205943;
+            font-style: italic;
+        }
+
+        .message {
+            border-left: 3px solid #c9e86b;
+            padding: 15px 20px;
+            max-width: 260px;
+            color: #56675e;
+            line-height: 1.7;
+        }
+
+        .card {
+            background: #205943;
+            color: white;
+            padding: 30px;
+            border-left: 5px solid #c9e86b;
+            margin-bottom: 35px;
+        }
+
+        .card small {
+            color: #d5f477;
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
+
+        .card h2 {
+            font-family: Georgia, serif;
+            font-size: 30px;
+            font-weight: normal;
+            margin: 8px 0;
+        }
+
+        .card p {
+            color: #e0e9df;
+            font-size: 14px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 25px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 14px 22px;
+            background: #205943;
+            color: white;
+            text-decoration: none;
+            border: 1px solid #205943;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            background: #c9e86b;
+            color: #205943;
+        }
+
+        .btn.secondary {
+            background: transparent;
+            color: #205943;
+        }
+
+        .btn.secondary:hover {
+            background: #205943;
+            color: white;
+        }
+
+        footer {
+            border-top: 1px solid #d5d9ce;
+            padding: 25px 0;
+            margin-top: 55px;
+            color: #68766d;
+            font-size: 13px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        @media (max-width: 650px) {
+            header p {
+                display: none;
+            }
+
+            .hero {
+                flex-direction: column;
+                align-items: flex-start;
+                margin: 65px 0 40px;
+            }
+
+            .message {
+                max-width: 100%;
+            }
+
+            h1 {
+                font-size: 68px;
+            }
+
+            .card {
+                padding: 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <header>
+            <div class="logo">
+                <span>W</span>
+                WEB PROGRAMMING
+            </div>
+            <p>COURSEWORK ARCHIVE · LIVE</p>
+        </header>
+
+        <section class="hero">
+            <div class="error-text">
+                <p class="tag">A LITTLE DETOUR</p>
+                <h1>Page not <span>found.</span></h1>
+            </div>
+
+            <div class="message">
+                Looks like this page has gone missing.
+                Don't worry, your coursework is still waiting for you.
+            </div>
+        </section>
+
+        <section class="card">
+            <small>ERROR 404</small>
+            <h2>Oops! Wrong direction.</h2>
+            <p>The page you are looking for doesn't exist or may have been moved.</p>
+        </section>
+
+        <p>Let's get you back to your projects.</p>
+
+        <div class="actions">
+            <a class="btn" href="https://sushant0101n-gif.github.io/web-programming-202537254-/">
+                ← Back to Web Programming
+            </a>
+
+            <a <a class="btn secondary" href="./index.html">
+    Visit Week 9 Home ↗
+</a>
+            
+        </div>
+
+        <footer>
+            <span>WEB PROGRAMMING · GACHON UNIVERSITY</span>
+            <span>DESIGNED BY NEUPANE SUSHANT</span>
+        </footer>
+
+    </div>
+
+</body>
+</html>
