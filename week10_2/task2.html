@@ -3,13 +3,148 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="refresh" content="0; url=https://sushant0101n-gif.github.io/webpro-book-search/">
-  <title>Book Search</title>
-  <script>
-    window.location.replace("https://sushant0101n-gif.github.io/webpro-book-search/");
-  </script>
+  <meta name="theme-color" content="#fff8f4">
+  <meta name="description" content="Week 10 Part 2 Book Search assignment links.">
+  <title>Book Search | Week 10 · Part 2</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #753b2d;
+      --muted: #805548;
+      --rust: #943f2e;
+      --coral: #d9774c;
+      --line: #f0d2c5;
+      --paper: #fff8f4;
+      --white: #fff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      padding: 48px 24px;
+      background: #fbf3ee;
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .assignment-card {
+      width: min(100%, 950px);
+      margin: 0 auto;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: var(--white);
+      box-shadow: 0 18px 55px rgb(117 59 45 / 10%);
+    }
+
+    .card-header {
+      padding: 38px 40px;
+      background: linear-gradient(110deg, var(--rust), var(--coral));
+      color: var(--white);
+    }
+
+    .week-label {
+      display: inline-block;
+      margin: 0 0 14px;
+      padding: 7px 15px;
+      border: 1px solid rgb(255 255 255 / 35%);
+      border-radius: 999px;
+      background: rgb(255 255 255 / 12%);
+      font-size: 13px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(32px, 6vw, 58px);
+      line-height: 1.08;
+    }
+
+    .card-body { padding: 34px 40px 38px; }
+
+    .intro {
+      margin: 0 0 24px;
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.55;
+    }
+
+    .repository-panel {
+      padding: 25px;
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      background: #fffaf7;
+    }
+
+    .repository-panel h2 {
+      margin: 0 0 7px;
+      color: var(--rust);
+      font-size: 22px;
+    }
+
+    .repository-name {
+      margin: 0;
+      color: var(--muted);
+      font-size: 17px;
+      overflow-wrap: anywhere;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 26px;
+    }
+
+    .button {
+      display: inline-flex;
+      min-height: 52px;
+      align-items: center;
+      justify-content: center;
+      padding: 0 22px;
+      border: 1px solid var(--rust);
+      border-radius: 12px;
+      color: var(--rust);
+      font-size: 16px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: transform 150ms ease, background 150ms ease, color 150ms ease;
+    }
+
+    .button-primary { background: var(--rust); color: var(--white); }
+    .button:hover { transform: translateY(-2px); background: #773424; color: var(--white); }
+    .button:focus-visible { outline: 3px solid var(--coral); outline-offset: 3px; }
+
+    @media (max-width: 600px) {
+      body { padding: 24px 14px; }
+      .card-header { padding: 29px 24px; }
+      .card-body { padding: 26px 24px 30px; }
+      .repository-panel { padding: 20px; }
+      .actions { flex-direction: column; }
+      .button { width: 100%; }
+    }
+  </style>
 </head>
 <body>
-  <p>Opening the <a href="https://sushant0101n-gif.github.io/webpro-book-search/">Book Search project</a>…</p>
+  <main class="assignment-card">
+    <header class="card-header">
+      <p class="week-label">Week 10 · Part 2</p>
+      <h1>Book Search Assignment</h1>
+    </header>
+    <section class="card-body" aria-labelledby="repository-title">
+      <p class="intro">This assignment is linked to the Book Search repository provided for Week 10_2.</p>
+      <div class="repository-panel">
+        <h2 id="repository-title">Repository</h2>
+        <p class="repository-name">GitHub: sushant0101n-gif/webpro-book-search</p>
+        <nav class="actions" aria-label="Book Search project links">
+          <a class="button button-primary" href="https://github.com/sushant0101n-gif/webpro-book-search">Open Repository</a>
+          <a class="button" href="https://sushant0101n-gif.github.io/webpro-book-search/">Open Live Page</a>
+        </nav>
+      </div>
+    </section>
+  </main>
 </body>
 </html>
