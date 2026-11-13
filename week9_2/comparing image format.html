@@ -7,6 +7,10 @@
   <title>Image Format Practice</title>
 
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       font-family: system-ui, sans-serif;
       padding: 24px;
@@ -33,6 +37,38 @@
       color: #64748b;
       line-height: 1.6;
     }
+
+    a, button {
+      margin: 10px 5px 10px 0;
+      padding: 10px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button {
+      background: #15803d;
+      color: white;
+      border: none;
+    }
+
+    a {
+      color: #1d4ed8;
+    }
+
+    a:focus-visible,
+    button:focus-visible {
+      outline: 3px solid #2563eb;
+      outline-offset: 4px;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: -9999px;
+    }
+
+    .skip-link:focus {
+      position: static;
+    }
   </style>
 </head>
 
@@ -40,39 +76,55 @@
 
   <h2>Image Format Practice</h2>
 
-  <!-- WebP format with JPEG fallback and responsive sizes -->
-  <picture>
+  <a href="#my-image" class="skip-link">Skip to image</a>
 
+  <picture id="my-image">
     <source
       type="image/webp"
       srcset="
-        https://picsum.photos/400/200.webp 400w,
-        https://picsum.photos/800/400.webp 800w
+        https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?fm=webp&w=400&h=200&fit=crop 400w,
+        https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?fm=webp&w=800&h=400&fit=crop 800w
       "
-      sizes="(max-width: 480px) 400px, 800px"
+      sizes="(max-width: 500px) calc(100vw - 48px), 452px"
     >
 
     <img
-      src="https://picsum.photos/800/400"
+      src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?fm=jpg&w=800&h=400&fit=crop"
       srcset="
-        https://picsum.photos/400/200 400w,
-        https://picsum.photos/800/400 800w
+        https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?fm=jpg&w=400&h=200&fit=crop 400w,
+        https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?fm=jpg&w=800&h=400&fit=crop 800w
       "
-      sizes="(max-width: 480px) 400px, 800px"
-      alt="A scenic photograph displayed using responsive image formats"
+      sizes="(max-width: 500px) calc(100vw - 48px), 452px"
+      alt="A beautiful scenic landscape photograph"
       width="800"
       height="400"
       fetchpriority="high"
       decoding="async"
     >
-
   </picture>
 
-  <p>
-    This image uses WebP when supported by the browser and JPEG
-    as a fallback. The srcset attribute allows the browser to
-    select an appropriate image size depending on the screen.
+  <button type="button" id="infoButton">
+    Show image information
+  </button>
+
+  <p id="imageInfo" hidden>
+    This image uses WebP when supported by the browser
+    and JPEG as a fallback. The srcset attribute allows
+    the browser to select an appropriate image size.
   </p>
+
+  <script>
+    const button = document.getElementById("infoButton");
+    const info = document.getElementById("imageInfo");
+
+    button.addEventListener("click", function() {
+      info.hidden = !info.hidden;
+
+      button.textContent = info.hidden
+        ? "Show image information"
+        : "Hide image information";
+    });
+  </script>
 
 </body>
 </html>
