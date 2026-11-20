@@ -18,17 +18,115 @@
     }
 
     .container {
-      max-width: 500px;
+      max-width: 600px;
       margin: auto;
     }
 
     .notification {
       padding: 15px;
-      margin: 10px 0;
-      border: 1px solid #ccc;
+      margin: 12px 0;
+      border: 1px solid #ddd;
       border-radius: 8px;
       background: white;
       list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .unread {
+      border-left: 5px solid #2563eb;
+      background: #eff6ff;
+    }
+
+    .read {
+      opacity: 0.7;
+    }
+
+    .success {
+      border-left: 5px solid #16a34a;
+    }
+
+    .warning {
+      border-left: 5px solid #eab308;
+    }
+
+    .info {
+      border-left: 5px solid #2563eb;
+    }
+
+    button {
+      padding: 8px 12px;
+      margin: 4px;
+      border: none;
+      border-radius: 5px;
+      background: #2563eb;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    .delete {
+      background: #dc2626;
+    }
+
+    .delete:hover {
+      background: #b91c1c;
+    }
+
+    input, select {
+      padding: 9px;
+      margin: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .active {
+      background: #0f172a;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 25px;
+      color: #64748b;
+    }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      background: #dc2626;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 13px;
+    }
+
+    .form {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 15px 0;
+    }
+
+    .message {
+      flex: 1;
+    }
+
+    .message p {
+      margin: 5px 0;
+    }
+
+    .message small {
+      color: #64748b;
     }
   </style>
 </head>
@@ -39,45 +137,209 @@
 
   <script type="text/babel">
 
-    const notifications = [
-      { id: 1, type: 'success', message: 'Profile updated successfully' },
-      { id: 2, type: 'warning', message: 'Assignment deadline is approaching' },
-      { id: 3, type: 'info', message: 'New lecture materials available' },
-    ];
+    const { useState } = React;
 
-    function NotificationItem({ type, message }) {
-      const icon = type === 'success'
-        ? '✅'
-        : type === 'warning'
-        ? '⚠️'
-        : 'ℹ️';
+    function NotificationItem({ notification, onDelete, onToggle }) {
+
+      const icon = notification.type === "success"
+        ? "✅"
+        : notification.type === "warning"
+        ? "⚠️"
+        : "ℹ️";
 
       return (
-        <li className="notification">
-          {icon} {message}
+        <li className={`notification ${notification.type} ${notification.read ? "read" : "unread"}`}>
+
+          <div className="message">
+            <p>
+              {icon} <strong>{notification.message}</strong>
+            </p>
+
+            <small>
+              {notification.read ? "Read" : "Unread"}
+            </small>
+          </div>
+
+          <div>
+            <button onClick={() => onToggle(notification.id)}>
+              {notification.read ? "Mark Unread" : "Mark Read"}
+            </button>
+
+            <button className="delete"
+              onClick={() => onDelete(notification.id)}>
+              Delete
+            </button>
+          </div>
+
         </li>
       );
     }
 
     function NotificationList() {
+
+      const [notifications, setNotifications] = useState([
+        { id: 1, type: "success", message: "Profile updated successfully", read: false },
+        { id: 2, type: "warning", message: "Assignment deadline is approaching", read: false },
+        { id: 3, type: "info", message: "New lecture materials available", read: true }
+      ]);
+
+      const [filter, setFilter] = useState("all");
+      const [message, setMessage] = useState("");
+      const [type, setType] = useState("info");
+
+      const [showForm, setShowForm] = useState(false);
+
+      const unreadCount = notifications.filter(n => !n.read).length;
+
+      const filteredNotifications = notifications.filter(n => {
+        if (filter === "unread") return !n.read;
+        if (filter === "read") return n.read;
+        return true;
+      });
+
+      function toggleRead(id) {
+        setNotifications(notifications.map(n =>
+          n.id === id ? { ...n, read: !n.read } : n
+        ));
+      }
+
+      function deleteNotification(id) {
+        setNotifications(notifications.filter(n => n.id !== id));
+      }
+
+      function markAllRead() {
+        setNotifications(notifications.map(n => ({
+          ...n,
+          read: true
+        })));
+      }
+
+      function clearAll() {
+        setNotifications([]);
+      }
+
+      function addNotification() {
+        if (message.trim() === "") return;
+
+        const newNotification = {
+          id: Date.now(),
+          type: type,
+          message: message,
+          read: false
+        };
+
+        setNotifications([newNotification, ...notifications]);
+        setMessage("");
+        setShowForm(false);
+        setFilter("all");
+      }
+
       return (
         <div className="container">
-          <h2>Sushant's Notifications</h2>
+
+          <div className="top">
+            <h2>Sushant's Notifications 🔔</h2>
+            <span className="badge">
+              {unreadCount} Unread
+            </span>
+          </div>
+
+          <p>You have {notifications.length} total notifications.</p>
+
+          <button onClick={() => setShowForm(!showForm)}>
+            {showForm ? "Close Form" : "+ Add Notification"}
+          </button>
+
+          {showForm && (
+            <div className="form">
+              <h3>New Notification</h3>
+
+              <input
+                type="text"
+                placeholder="Enter notification message"
+                value={message}
+                onChange={e => setMessage(e.target.value)}
+              />
+
+              <br />
+
+              <select
+                value={type}
+                onChange={e => setType(e.target.value)}
+              >
+                <option value="success">Success</option>
+                <option value="warning">Warning</option>
+                <option value="info">Information</option>
+              </select>
+
+              <br />
+
+              <button onClick={addNotification}>
+                Add
+              </button>
+            </div>
+          )}
+
+          <hr />
+
+          <h3>Filter Notifications</h3>
+
+          <button
+            className={filter === "all" ? "active" : ""}
+            onClick={() => setFilter("all")}>
+            All ({notifications.length})
+          </button>
+
+          <button
+            className={filter === "unread" ? "active" : ""}
+            onClick={() => setFilter("unread")}>
+            Unread ({unreadCount})
+          </button>
+
+          <button
+            className={filter === "read" ? "active" : ""}
+            onClick={() => setFilter("read")}>
+            Read ({notifications.length - unreadCount})
+          </button>
+
+          <br /><br />
+
+          <button onClick={markAllRead}>
+            Mark All as Read
+          </button>
+
+          <button className="delete" onClick={clearAll}>
+            Clear All
+          </button>
 
           <ul style={{ padding: 0 }}>
-            {notifications.map(n => (
-              <NotificationItem
-                key={n.id}
-                type={n.type}
-                message={n.message}
-              />
-            ))}
+
+            {filteredNotifications.length > 0 ? (
+
+              filteredNotifications.map(n => (
+                <NotificationItem
+                  key={n.id}
+                  notification={n}
+                  onDelete={deleteNotification}
+                  onToggle={toggleRead}
+                />
+              ))
+
+            ) : (
+
+              <li className="empty">
+                No notifications found 🔔
+              </li>
+
+            )}
+
           </ul>
+
         </div>
       );
     }
 
-    ReactDOM.createRoot(document.getElementById('root')).render(
+    ReactDOM.createRoot(document.getElementById("root")).render(
       <NotificationList />
     );
 
