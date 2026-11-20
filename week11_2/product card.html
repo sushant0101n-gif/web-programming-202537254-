@@ -1,0 +1,190 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Products</title>
+
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f1f5f9;
+      color: #1e293b;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 60px auto;
+      padding: 20px;
+    }
+
+    header {
+      margin-bottom: 30px;
+    }
+
+    header h1 {
+      color: #1e3a8a;
+      margin-bottom: 8px;
+    }
+
+    header p {
+      color: #64748b;
+    }
+
+    .product-list {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .card {
+      background: white;
+      padding: 22px;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .product-card h3 {
+      font-size: 18px;
+      margin-top: 0;
+    }
+
+    .price {
+      font-size: 22px;
+      font-weight: bold;
+      color: #2563eb;
+    }
+
+    .stars {
+      color: #f59e0b;
+      font-size: 21px;
+    }
+
+    .rating {
+      color: #64748b;
+      font-size: 14px;
+    }
+
+    .stock {
+      display: inline-block;
+      padding: 7px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .in-stock {
+      background: #dcfce7;
+      color: #15803d;
+    }
+
+    .out-of-stock {
+      background: #fee2e2;
+      color: #dc2626;
+    }
+
+    .sold-out {
+      opacity: 0.75;
+      border-color: #fecaca;
+    }
+
+    @media (max-width: 650px) {
+      .product-list {
+        grid-template-columns: 1fr;
+      }
+
+      .container {
+        margin: 25px auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    function Stars({ rating }) {
+      const full = Math.floor(rating);
+      const half = rating - full >= 0.5 ? 1 : 0;
+      const empty = 5 - full - half;
+
+      return (
+        <span className="stars" aria-hidden="true">
+          {'★'.repeat(full)}
+          {half ? '½' : ''}
+          {'☆'.repeat(empty)}
+        </span>
+      );
+    }
+
+    function ProductCard({ name, price, rating, inStock }) {
+      return (
+        <div className={inStock ? 'card product-card' : 'card product-card sold-out'}>
+          <h3>{name}</h3>
+
+          <p className="price">
+            {price.toLocaleString('ko-KR')}원
+          </p>
+
+          <Stars rating={rating} />
+
+          <p className="rating">{rating} / 5 stars</p>
+
+          <p className={inStock ? 'stock in-stock' : 'stock out-of-stock'}>
+            {inStock ? 'In Stock' : 'Out of Stock'}
+          </p>
+        </div>
+      );
+    }
+
+    function App() {
+      return (
+        <div className="container">
+
+          <header>
+            <h1>My Products</h1>
+            <p>Check out our available products.</p>
+          </header>
+
+          <div className="product-list">
+            <ProductCard
+              name="Wireless Earbuds"
+              price={89000}
+              rating={4.5}
+              inStock={true}
+            />
+
+            <ProductCard
+              name="Mechanical Keyboard"
+              price={129000}
+              rating={4}
+              inStock={true}
+            />
+
+            <ProductCard
+              name="USB-C Hub"
+              price={45000}
+              rating={3.5}
+              inStock={false}
+            />
+          </div>
+
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
