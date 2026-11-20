@@ -131,16 +131,16 @@
       for (const item of data.tree) {
         if (item.type !== "blob" || !/\.html$/i.test(item.path)) continue;
         const [folder, ...filePath] = item.path.split("/");
-        if (!weekFolderPattern.test(folder)) continue;
+        if (filePath.length === 0 || !weekFolderPattern.test(folder)) continue;
 
         const relativePath = filePath.join("/");
         const isWeek12 = folder.toLowerCase() === "week12";
         const isBuiltShoppingCart = isWeek12 && relativePath.toLowerCase() === "dist/index.html";
 
-        // The root Week 12 index is the Vite source shell and does not run on GitHub Pages.
-        // Link to the built app instead, while leaving all source files untouched.
+        // Only Week 12 needs special handling: hide the Vite source shell and
+        // show its built app. Keep all other weeks' project links unchanged.
         if (isWeek12 && relativePath.toLowerCase() === "index.html") continue;
-        if (filePath.length > 0 && !isBuiltShoppingCart) continue;
+        if (isWeek12 && !isBuiltShoppingCart) continue;
 
         if (!filesByWeek.has(folder)) filesByWeek.set(folder, []);
         filesByWeek.get(folder).push(item.path);
