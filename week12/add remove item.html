@@ -1,0 +1,442 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Task Manager</title>
+
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 30px 15px;
+      font-family: Arial, sans-serif;
+      background: #eef2ff;
+      color: #1e293b;
+    }
+
+    .app {
+      max-width: 650px;
+      margin: 30px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 18px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      color: #1e3a8a;
+    }
+
+    .subtitle {
+      color: #64748b;
+      margin-bottom: 25px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .stat {
+      background: #f1f5f9;
+      padding: 15px;
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 24px;
+      color: #2563eb;
+      margin-bottom: 5px;
+    }
+
+    .stat span {
+      font-size: 12px;
+      color: #64748b;
+    }
+
+    .input-area {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    input, select {
+      padding: 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 9px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    input:focus, select:focus {
+      border-color: #2563eb;
+    }
+
+    .input-area input {
+      flex: 1;
+      min-width: 0;
+    }
+
+    button {
+      border: none;
+      border-radius: 9px;
+      padding: 11px 16px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      opacity: 0.85;
+      transform: translateY(-1px);
+    }
+
+    .add-btn {
+      background: #2563eb;
+      color: white;
+    }
+
+    .filters {
+      display: flex;
+      gap: 8px;
+      margin: 20px 0;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      background: #e2e8f0;
+      color: #475569;
+    }
+
+    .filter-btn.active {
+      background: #2563eb;
+      color: white;
+    }
+
+    .task {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      background: #fff;
+    }
+
+    .task input {
+      width: 17px;
+      height: 17px;
+      cursor: pointer;
+    }
+
+    .task-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .task-name {
+      font-weight: bold;
+      overflow-wrap: anywhere;
+    }
+
+    .completed {
+      text-decoration: line-through;
+      color: #94a3b8;
+    }
+
+    .priority {
+      display: inline-block;
+      margin-top: 5px;
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 20px;
+      background: #dbeafe;
+      color: #1d4ed8;
+    }
+
+    .high {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
+    .low {
+      background: #dcfce7;
+      color: #15803d;
+    }
+
+    .delete-btn {
+      background: #fee2e2;
+      color: #dc2626;
+      padding: 8px 11px;
+    }
+
+    .progress-area {
+      margin-top: 25px;
+    }
+
+    .progress-text {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      margin-bottom: 8px;
+      color: #64748b;
+    }
+
+    .progress-bar {
+      height: 9px;
+      background: #e2e8f0;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: #2563eb;
+      transition: width 0.3s;
+    }
+
+    .empty {
+      text-align: center;
+      color: #94a3b8;
+      padding: 30px 10px;
+    }
+
+    .bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 20px;
+      gap: 10px;
+    }
+
+    .clear-btn {
+      background: #f1f5f9;
+      color: #475569;
+    }
+
+    @media (max-width: 450px) {
+      .app {
+        padding: 20px;
+      }
+
+      .stats {
+        gap: 6px;
+      }
+
+      .input-area {
+        flex-wrap: wrap;
+      }
+
+      .input-area input {
+        width: 100%;
+        flex-basis: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState } = React;
+
+    function TaskList() {
+      const [tasks, setTasks] = useState([]);
+      const [input, setInput] = useState("");
+      const [priority, setPriority] = useState("Normal");
+      const [filter, setFilter] = useState("All");
+
+      function addTask() {
+        if (!input.trim()) return;
+
+        const newTask = {
+          id: Date.now(),
+          text: input.trim(),
+          priority: priority,
+          completed: false
+        };
+
+        setTasks(prev => [...prev, newTask]);
+        setInput("");
+        setPriority("Normal");
+      }
+
+      function removeTask(id) {
+        setTasks(prev => prev.filter(task => task.id !== id));
+      }
+
+      function toggleTask(id) {
+        setTasks(prev =>
+          prev.map(task =>
+            task.id === id
+              ? { ...task, completed: !task.completed }
+              : task
+          )
+        );
+      }
+
+      const completedCount = tasks.filter(task => task.completed).length;
+      const remainingCount = tasks.length - completedCount;
+
+      const filteredTasks = tasks.filter(task => {
+        if (filter === "Active") return !task.completed;
+        if (filter === "Completed") return task.completed;
+        return true;
+      });
+
+      const progress = tasks.length === 0
+        ? 0
+        : Math.round((completedCount / tasks.length) * 100);
+
+      return (
+        <div className="app">
+
+          <h1>My Task Manager 📋</h1>
+          <p className="subtitle">
+            Organize your day and get things done.
+          </p>
+
+          <div className="stats">
+            <div className="stat">
+              <strong>{tasks.length}</strong>
+              <span>Total Tasks</span>
+            </div>
+
+            <div className="stat">
+              <strong>{remainingCount}</strong>
+              <span>Remaining</span>
+            </div>
+
+            <div className="stat">
+              <strong>{completedCount}</strong>
+              <span>Completed</span>
+            </div>
+          </div>
+
+          <div className="input-area">
+            <input
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              onKeyDown={e => e.key === "Enter" && addTask()}
+              placeholder="What do you need to do?"
+            />
+
+            <select
+              value={priority}
+              onChange={e => setPriority(e.target.value)}
+            >
+              <option value="Low">Low</option>
+              <option value="Normal">Normal</option>
+              <option value="High">High</option>
+            </select>
+
+            <button className="add-btn" onClick={addTask}>
+              + Add
+            </button>
+          </div>
+
+          <div className="filters">
+            {["All", "Active", "Completed"].map(item => (
+              <button
+                key={item}
+                className={`filter-btn ${filter === item ? "active" : ""}`}
+                onClick={() => setFilter(item)}
+              >
+                {item}
+              </button>
+            ))}
+          </div>
+
+          <div>
+            {filteredTasks.length === 0 ? (
+              <div className="empty">
+                {tasks.length === 0
+                  ? "No tasks yet. Add your first task!"
+                  : "No tasks in this category."}
+              </div>
+            ) : (
+              filteredTasks.map(task => (
+                <div className="task" key={task.id}>
+                  <input
+                    type="checkbox"
+                    checked={task.completed}
+                    onChange={() => toggleTask(task.id)}
+                  />
+
+                  <div className="task-info">
+                    <div className={`task-name ${task.completed ? "completed" : ""}`}>
+                      {task.text}
+                    </div>
+
+                    <span className={`priority ${
+                      task.priority === "High" ? "high" :
+                      task.priority === "Low" ? "low" : ""
+                    }`}>
+                      {task.priority} Priority
+                    </span>
+                  </div>
+
+                  <button
+                    className="delete-btn"
+                    onClick={() => removeTask(task.id)}
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))
+            )}
+          </div>
+
+          <div className="progress-area">
+            <div className="progress-text">
+              <span>Task Progress</span>
+              <strong>{progress}%</strong>
+            </div>
+
+            <div className="progress-bar">
+              <div
+                className="progress-fill"
+                style={{ width: `${progress}%` }}
+              ></div>
+            </div>
+          </div>
+
+          <div className="bottom">
+            <span>{remainingCount} task(s) left</span>
+
+            <button
+              className="clear-btn"
+              onClick={() => setTasks([])}
+            >
+              Clear All
+            </button>
+          </div>
+
+        </div>
+      );
+    }
+
+    function App() {
+      return <TaskList />;
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+</body>
+</html>
