@@ -1,37 +1,76 @@
 
-function ProfileCard({ name, role, email, avatarUrl = 'https://via.placeholder.com/80' }) {
-  return (
-    <div style={{
-      border: '1px solid #ccc',
-      borderRadius: 8,
-      padding: 16,
-      maxWidth: 300
-    }}>
-      <img
-        src={avatarUrl}
-        alt={name}
-        style={{ borderRadius: '50%', width: 80, height: 80 }}
-      />
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile Card</title>
 
-      <h2>{name}</h2>
-      <p>{role}</p>
-      <a href={`mailto:${email}`}>{email}</a>
-    </div>
-  );
-}
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-function App() {
-  return (
-    <div>
-      <h1>My Profile</h1>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f9;
+      padding: 30px;
+    }
 
-      <ProfileCard
-        name="Sushant Neupane"
-        role="Computer Engineering Student"
-        email="202537254@gachon.ac.kr"
-      />
-    </div>
-  );
-}
+    .profile-card {
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 16px;
+      max-width: 300px;
+    }
 
-export default App;
+    .profile-card img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="root"></div>
+
+  <script type="text/babel">
+    function ProfileCard({
+      name,
+      role,
+      email,
+      avatarUrl = 'https://via.placeholder.com/80'
+    }) {
+      return (
+        <div className="profile-card">
+          <img src={avatarUrl} alt={name} />
+          <h2>{name}</h2>
+          <p>{role}</p>
+          <a href={`mailto:${email}`}>{email}</a>
+        </div>
+      );
+    }
+
+    function App() {
+      return (
+        <div>
+          <h1>My Profile</h1>
+
+         <ProfileCard
+  name="Sushant Neupane"
+  role="Computer Engineering Student"
+  email="202537254@gachon.ac.kr"
+  avatarUrl="profile.jpg"
+/>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+
+</body>
+</html>
