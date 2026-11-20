@@ -1,0 +1,44 @@
+const notifications = [
+  { id: 1, type: 'success', message: 'Profile updated successfully' },
+  { id: 2, type: 'warning', message: 'Assignment deadline is approaching' },
+  { id: 3, type: 'info', message: 'New lecture materials available' },
+];
+
+function NotificationItem({ type, message }) {
+  const icon = type === 'success'
+    ? '✅'
+    : type === 'warning'
+    ? '⚠️'
+    : 'ℹ️';
+
+  return (
+    <li style={{
+      padding: 12,
+      margin: 8,
+      border: '1px solid #ccc',
+      borderRadius: 8,
+      listStyle: 'none'
+    }}>
+      {icon} {message}
+    </li>
+  );
+}
+
+function NotificationList() {
+  return (
+    <div>
+      <h2>Sushant's Notifications</h2>
+      <ul style={{ padding: 0 }}>
+        {notifications.map(n => (
+          <NotificationItem
+            key={n.id}
+            type={n.type}
+            message={n.message}
+          />
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export default NotificationList;
