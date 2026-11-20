@@ -1,0 +1,59 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Counter with History</title>
+</head>
+<body>
+
+  <h2>Counter: <span id="count">0</span></h2>
+
+  <button onclick="increase()">+1</button>
+  <button onclick="decrease()">-1</button>
+  <button onclick="reset()">Reset</button>
+  <button onclick="undo()">Undo</button>
+
+  <h3>History (Last 5)</h3>
+  <p id="history">0</p>
+
+  <script>
+    let count = 0;
+    let history = [0];
+
+    function updateHistory() {
+      document.getElementById("count").textContent = count;
+      document.getElementById("history").textContent = history.join(", ");
+    }
+
+    function increase() {
+      count++;
+      history.push(count);
+      history = history.slice(-5);
+      updateHistory();
+    }
+
+    function decrease() {
+      count--;
+      history.push(count);
+      history = history.slice(-5);
+      updateHistory();
+    }
+
+    function reset() {
+      count = 0;
+      history.push(count);
+      history = history.slice(-5);
+      updateHistory();
+    }
+
+    function undo() {
+      if (history.length > 1) {
+        history.pop();
+        count = history[history.length - 1];
+        updateHistory();
+      }
+    }
+  </script>
+
+</body>
+</html>
