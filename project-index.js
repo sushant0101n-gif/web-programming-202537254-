@@ -18,7 +18,14 @@
   resultCount.textContent = "Loading projects...";
 
   function parseTaskLabel(fileName, path = "") {
-    if (path.toLowerCase() === "week12/dist/index.html") return "Shopping Cart";
+    const normalizedPath = path.toLowerCase();
+    const week12Labels = {
+      "week12/dist/index.html": "Shopping Cart",
+      "week12/toogle visibility.html": "Exercise 1 — Toggle visibility",
+      "week12/add remove item.html": "Exercise 2 — Add & remove items from a list",
+      "week12/lift state between 2 counter.html": "Exercise 3 — Lift state between two counters"
+    };
+    if (week12Labels[normalizedPath]) return week12Labels[normalizedPath];
 
     const name = fileName.replace(/\.[^.]+$/, "");
     const taskMatch = name.match(/^task\s*(\d+)/i);
@@ -135,12 +142,12 @@
 
         const relativePath = filePath.join("/");
         const isWeek12 = folder.toLowerCase() === "week12";
-        const isBuiltShoppingCart = isWeek12 && relativePath.toLowerCase() === "dist/index.html";
+        const isBuiltShoppingCart = relativePath.toLowerCase() === "dist/index.html";
 
-        // Only Week 12 needs special handling: hide the Vite source shell and
-        // show its built app. Keep all other weeks' project links unchanged.
+        // For Week 12, list its direct exercise pages and the built shopping cart.
+        // Hide only the Vite source index and unrelated nested HTML files.
         if (isWeek12 && relativePath.toLowerCase() === "index.html") continue;
-        if (isWeek12 && !isBuiltShoppingCart) continue;
+        if (isWeek12 && filePath.length > 1 && !isBuiltShoppingCart) continue;
 
         if (!filesByWeek.has(folder)) filesByWeek.set(folder, []);
         filesByWeek.get(folder).push(item.path);
