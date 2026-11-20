@@ -1,0 +1,220 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>React Toggle Details</title>
+
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #eef2ff;
+      color: #1e293b;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 520px;
+      background: white;
+      padding: 30px;
+      border-radius: 18px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    h2 {
+      margin: 0;
+      color: #1e3a8a;
+    }
+
+    .badge {
+      background: #fee2e2;
+      color: #b91c1c;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .badge.open {
+      background: #dcfce7;
+      color: #15803d;
+    }
+
+    .description {
+      color: #64748b;
+      line-height: 1.6;
+      margin-bottom: 22px;
+    }
+
+    button {
+      border: none;
+      padding: 11px 18px;
+      border-radius: 9px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: bold;
+      transition: 0.2s;
+    }
+
+    .main-btn {
+      background: #2563eb;
+      color: white;
+      width: 100%;
+    }
+
+    button:hover {
+      opacity: 0.85;
+      transform: translateY(-1px);
+    }
+
+    .details {
+      margin-top: 20px;
+      padding: 20px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      animation: appear 0.3s ease;
+    }
+
+    .details h3 {
+      margin-top: 0;
+      color: #1e40af;
+    }
+
+    .detail-item {
+      padding: 10px 0;
+      border-bottom: 1px solid #e2e8f0;
+      line-height: 1.5;
+    }
+
+    .detail-item:last-child {
+      border-bottom: none;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 20px;
+      color: #64748b;
+      font-size: 13px;
+    }
+
+    .reset-btn {
+      background: #e2e8f0;
+      color: #334155;
+    }
+
+    @keyframes appear {
+      from {
+        opacity: 0;
+        transform: translateY(-8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState } = React;
+
+    function ToggleDetail() {
+      const [isVisible, setIsVisible] = useState(false);
+      const [clicks, setClicks] = useState(0);
+
+      function toggleDetails() {
+        setIsVisible(prev => !prev);
+        setClicks(prev => prev + 1);
+      }
+
+      function resetDetails() {
+        setIsVisible(false);
+        setClicks(0);
+      }
+
+      return (
+        <div className="container">
+
+          <div className="top">
+            <h2>React Learning Card</h2>
+            <span className={`badge ${isVisible ? "open" : ""}`}>
+              {isVisible ? "OPEN" : "CLOSED"}
+            </span>
+          </div>
+
+          <p className="description">
+            Discover how React state makes websites interactive.
+            Click below to explore more information.
+          </p>
+
+          <button className="main-btn" onClick={toggleDetails}>
+            {isVisible ? "Hide details ▲" : "Show details ▼"}
+          </button>
+
+          {isVisible && (
+            <div className="details">
+              <h3>About React State</h3>
+
+              <div className="detail-item">
+                <strong>1. useState:</strong>
+                <p>Stores and manages component data.</p>
+              </div>
+
+              <div className="detail-item">
+                <strong>2. Conditional Rendering:</strong>
+                <p>Displays content based on a condition.</p>
+              </div>
+
+              <div className="detail-item">
+                <strong>3. Dynamic Updates:</strong>
+                <p>Updates the user interface without reloading the page.</p>
+              </div>
+            </div>
+          )}
+
+          <div className="footer">
+            <span>Button clicks: {clicks}</span>
+            <button className="reset-btn" onClick={resetDetails}>
+              Reset
+            </button>
+          </div>
+
+        </div>
+      );
+    }
+
+    function App() {
+      return <ToggleDetail />;
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+</body>
+</html>
