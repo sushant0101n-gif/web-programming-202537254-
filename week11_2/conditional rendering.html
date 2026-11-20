@@ -1,0 +1,206 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conditional Rendering</title>
+
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f1f5f9;
+      color: #1e293b;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 650px;
+      margin: auto;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #64748b;
+      margin-bottom: 30px;
+    }
+
+    .alert {
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 12px;
+      font-weight: bold;
+    }
+
+    .alert-error {
+      background: #fee2e2;
+      color: #b91c1c;
+      border: 1px solid #fecaca;
+    }
+
+    .alert-success {
+      background: #dcfce7;
+      color: #15803d;
+      border: 1px solid #bbf7d0;
+    }
+
+    .card {
+      background: white;
+      padding: 30px;
+      border-radius: 16px;
+      margin-top: 20px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+      text-align: center;
+    }
+
+    .user-icon {
+      font-size: 45px;
+      margin-bottom: 15px;
+    }
+
+    .card h2 {
+      margin-bottom: 12px;
+    }
+
+    .card p {
+      color: #64748b;
+      margin-bottom: 20px;
+    }
+
+    button {
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    .logout {
+      background: #dc2626;
+    }
+
+    .logout:hover {
+      background: #b91c1c;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 20px;
+      background: #fef2f2;
+      color: #dc2626;
+      font-size: 13px;
+      margin-bottom: 20px;
+    }
+
+    .status.logged-in {
+      background: #dcfce7;
+      color: #15803d;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState } = React;
+
+    function Alert({ type, message }) {
+      if (!message) return null;
+
+      return (
+        <div className={`alert alert-${type}`} role="status">
+          {type === 'error' ? 'ERROR:' : 'OK:'} {message}
+        </div>
+      );
+    }
+
+    function Dashboard({ user }) {
+      return (
+        <div>
+          {user && <h2>Welcome, {user.name}!</h2>}
+          {!user && <h2>Please log in.</h2>}
+
+          <p>
+            {user
+              ? 'You are now logged into your dashboard.'
+              : 'Log in to access your account.'}
+          </p>
+        </div>
+      );
+    }
+
+    function ConditionalDemo() {
+      const [user, setUser] = useState(null);
+
+      return (
+        <div className="container">
+          <h1>Conditional Rendering</h1>
+          <p className="subtitle">
+            React useState and conditional rendering example
+          </p>
+
+          <Alert
+            type="error"
+            message={user ? '' : 'You are not logged in.'}
+          />
+
+          <Alert
+            type="success"
+            message={user ? 'Logged in successfully.' : ''}
+          />
+
+          <div className="card">
+            <div className="user-icon">👤</div>
+
+            <span className={`status ${user ? 'logged-in' : ''}`}>
+              {user ? '● Online' : '● Offline'}
+            </span>
+
+            <Dashboard user={user} />
+
+            <button
+              type="button"
+              className={user ? 'logout' : ''}
+              onClick={() =>
+                setUser(user ? null : { name: 'Sushant' })
+              }
+            >
+              {user ? 'Log out' : 'Log in'}
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    function App() {
+      return <ConditionalDemo />;
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
