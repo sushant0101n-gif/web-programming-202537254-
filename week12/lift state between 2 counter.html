@@ -1,0 +1,371 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Multiplayer Scoreboard</title>
+
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 30px 15px;
+      font-family: Arial, sans-serif;
+      background: #eef2ff;
+      color: #1e293b;
+    }
+
+    .dashboard {
+      max-width: 750px;
+      margin: 25px auto;
+      padding: 30px;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 10px 35px rgba(0,0,0,0.08);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .header h1 {
+      margin: 0 0 8px;
+      color: #1e3a8a;
+    }
+
+    .header p {
+      color: #64748b;
+    }
+
+    .total-box {
+      background: linear-gradient(135deg, #2563eb, #4f46e5);
+      color: white;
+      padding: 25px;
+      border-radius: 16px;
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .total-box h2 {
+      font-size: 42px;
+      margin: 10px 0;
+    }
+
+    .total-box p {
+      margin: 0;
+      opacity: 0.85;
+    }
+
+    .players {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+    }
+
+    .player-card {
+      padding: 22px;
+      background: #f8fafc;
+      border: 2px solid #e2e8f0;
+      border-radius: 15px;
+      text-align: center;
+      transition: 0.2s;
+    }
+
+    .player-card.winner {
+      border-color: #eab308;
+      background: #fefce8;
+    }
+
+    .avatar {
+      font-size: 42px;
+      margin-bottom: 10px;
+    }
+
+    .player-card h3 {
+      margin: 5px 0;
+      color: #334155;
+    }
+
+    .score {
+      font-size: 48px;
+      font-weight: bold;
+      color: #2563eb;
+      margin: 20px 0;
+    }
+
+    .winner .score {
+      color: #ca8a04;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    button {
+      border: none;
+      border-radius: 9px;
+      padding: 12px 20px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      opacity: 0.85;
+    }
+
+    .minus {
+      background: #fee2e2;
+      color: #dc2626;
+    }
+
+    .plus {
+      background: #dcfce7;
+      color: #15803d;
+    }
+
+    button:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .winner-label {
+      display: inline-block;
+      background: #fef3c7;
+      color: #92400e;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: bold;
+      margin-top: 12px;
+    }
+
+    .game-info {
+      margin-top: 25px;
+      padding: 20px;
+      background: #f1f5f9;
+      border-radius: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .game-info p {
+      margin: 5px 0;
+      color: #475569;
+    }
+
+    .reset {
+      background: #1e293b;
+      color: white;
+      font-size: 14px;
+    }
+
+    .history {
+      margin-top: 25px;
+    }
+
+    .history h3 {
+      color: #334155;
+    }
+
+    .history p {
+      padding: 10px;
+      background: #f8fafc;
+      border-radius: 8px;
+      color: #64748b;
+      font-size: 13px;
+    }
+
+    @media (max-width: 500px) {
+      .players {
+        grid-template-columns: 1fr;
+      }
+
+      .dashboard {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState } = React;
+
+    function PlayerScore({
+      name,
+      avatar,
+      score,
+      isWinner,
+      onIncrement,
+      onDecrement
+    }) {
+      return (
+        <div className={`player-card ${isWinner ? "winner" : ""}`}>
+
+          <div className="avatar">{avatar}</div>
+
+          <h3>{name}</h3>
+
+          <div className="score">{score}</div>
+
+          <div className="buttons">
+            <button
+              className="minus"
+              onClick={onDecrement}
+              disabled={score === 0}
+            >
+              −
+            </button>
+
+            <button className="plus" onClick={onIncrement}>
+              +
+            </button>
+          </div>
+
+          {isWinner && (
+            <div className="winner-label">
+              🏆 LEADING PLAYER
+            </div>
+          )}
+
+        </div>
+      );
+    }
+
+    function ScoreBoard() {
+      const [p1, setP1] = useState(0);
+      const [p2, setP2] = useState(0);
+      const [round, setRound] = useState(1);
+      const [history, setHistory] = useState([]);
+
+      const total = p1 + p2;
+
+      function updateScore(player, amount) {
+        if (player === 1) {
+          setP1(prev => Math.max(0, prev + amount));
+        } else {
+          setP2(prev => Math.max(0, prev + amount));
+        }
+
+        setHistory(prev => [
+          `${player === 1 ? "Player 1" : "Player 2"} ${
+            amount > 0 ? "gained" : "lost"
+          } ${Math.abs(amount)} point(s)`,
+          ...prev
+        ].slice(0, 5));
+      }
+
+      function nextRound() {
+        setRound(prev => prev + 1);
+      }
+
+      function resetGame() {
+        setP1(0);
+        setP2(0);
+        setRound(1);
+        setHistory([]);
+      }
+
+      const leader = p1 > p2
+        ? "Player 1"
+        : p2 > p1
+        ? "Player 2"
+        : "Tie Game";
+
+      return (
+        <div className="dashboard">
+
+          <div className="header">
+            <h1>🏆 Scoreboard</h1>
+            <p>Two players. One competition. Keep scoring!</p>
+          </div>
+
+          <div className="total-box">
+            <p>TOTAL COMBINED SCORE</p>
+            <h2>{total}</h2>
+            <p>Round {round} · {leader}</p>
+          </div>
+
+          <div className="players">
+
+            <PlayerScore
+              name="Player 1"
+              avatar="🧑‍💻"
+              score={p1}
+              isWinner={p1 > p2}
+              onIncrement={() => updateScore(1, 1)}
+              onDecrement={() => updateScore(1, -1)}
+            />
+
+            <PlayerScore
+              name="Player 2"
+              avatar="🎮"
+              score={p2}
+              isWinner={p2 > p1}
+              onIncrement={() => updateScore(2, 1)}
+              onDecrement={() => updateScore(2, -1)}
+            />
+
+          </div>
+
+          <div className="game-info">
+            <div>
+              <p><strong>Current Leader:</strong> {leader}</p>
+              <p><strong>Current Round:</strong> {round}</p>
+            </div>
+
+            <button className="plus" onClick={nextRound}>
+              Next Round →
+            </button>
+          </div>
+
+          <div className="history">
+            <h3>Recent Score Activity</h3>
+
+            {history.length === 0 ? (
+              <p>No activity yet. Start scoring!</p>
+            ) : (
+              history.map((item, index) => (
+                <p key={index}>• {item}</p>
+              ))
+            )}
+          </div>
+
+          <div style={{ textAlign: "center", marginTop: "25px" }}>
+            <button className="reset" onClick={resetGame}>
+              ↻ Reset Game
+            </button>
+          </div>
+
+        </div>
+      );
+    }
+
+    function App() {
+      return <ScoreBoard />;
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+</body>
+</html>
