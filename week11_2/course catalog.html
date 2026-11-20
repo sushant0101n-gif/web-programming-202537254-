@@ -1,0 +1,500 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>University Course Catalog</title>
+
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 30px 15px;
+      font-family: Arial, sans-serif;
+      background: #f1f5f9;
+      color: #1e293b;
+    }
+
+    .container {
+      max-width: 950px;
+      margin: auto;
+    }
+
+    .header {
+      background: #172554;
+      color: white;
+      padding: 30px;
+      border-radius: 16px;
+      margin-bottom: 25px;
+    }
+
+    .header h1 {
+      margin: 0 0 10px;
+    }
+
+    .header p {
+      color: #cbd5e1;
+      margin: 0;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .summary-card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.04);
+    }
+
+    .summary-card strong {
+      display: block;
+      font-size: 26px;
+      color: #2563eb;
+      margin-bottom: 5px;
+    }
+
+    .summary-card span {
+      color: #64748b;
+      font-size: 13px;
+    }
+
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    input {
+      flex: 1;
+      min-width: 180px;
+      padding: 12px 15px;
+      border: 1px solid #cbd5e1;
+      border-radius: 9px;
+      font-size: 14px;
+    }
+
+    button {
+      border: none;
+      padding: 11px 16px;
+      border-radius: 9px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      opacity: 0.85;
+      transform: translateY(-1px);
+    }
+
+    .filter {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .filter button {
+      background: #e2e8f0;
+      color: #475569;
+    }
+
+    .filter button.active {
+      background: #2563eb;
+      color: white;
+    }
+
+    .course-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+    }
+
+    .course-card {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 22px;
+      transition: 0.2s;
+    }
+
+    .course-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+    }
+
+    .course-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .badge {
+      font-size: 12px;
+      padding: 6px 11px;
+      border-radius: 20px;
+      font-weight: bold;
+    }
+
+    .required {
+      background: #fee2e2;
+      color: #dc2626;
+    }
+
+    .elective {
+      background: #e5e7eb;
+      color: #4b5563;
+    }
+
+    .course-card h3 {
+      margin: 18px 0 8px;
+      color: #1e3a8a;
+    }
+
+    .instructor {
+      color: #64748b;
+      font-size: 14px;
+    }
+
+    .course-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 22px;
+      padding-top: 15px;
+      border-top: 1px solid #e2e8f0;
+    }
+
+    .credits {
+      color: #475569;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .select-btn {
+      background: #2563eb;
+      color: white;
+      font-size: 13px;
+    }
+
+    .select-btn.selected {
+      background: #15803d;
+    }
+
+    .empty {
+      grid-column: 1 / -1;
+      text-align: center;
+      background: white;
+      border-radius: 12px;
+      padding: 35px;
+      color: #94a3b8;
+    }
+
+    .selected-section {
+      margin-top: 28px;
+      background: white;
+      padding: 22px;
+      border-radius: 14px;
+    }
+
+    .selected-section h2 {
+      margin-top: 0;
+      color: #1e3a8a;
+    }
+
+    .selected-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid #e2e8f0;
+      font-size: 14px;
+      gap: 10px;
+    }
+
+    .remove-btn {
+      background: #fee2e2;
+      color: #dc2626;
+      padding: 6px 10px;
+      font-size: 12px;
+    }
+
+    .total {
+      margin-top: 18px;
+      text-align: right;
+      font-size: 18px;
+      font-weight: bold;
+      color: #2563eb;
+    }
+
+    .clear-btn {
+      background: #e2e8f0;
+      color: #475569;
+      margin-top: 15px;
+    }
+
+    @media (max-width: 600px) {
+      .course-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .summary {
+        gap: 8px;
+      }
+
+      .summary-card {
+        padding: 12px;
+      }
+
+      .summary-card strong {
+        font-size: 21px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState } = React;
+
+    const courses = [
+      {
+        id: 1,
+        title: 'Web Programming',
+        instructor: 'Dr. Toshpulatov',
+        credits: 3,
+        required: true
+      },
+      {
+        id: 2,
+        title: 'Database Systems',
+        instructor: 'Dr. Kim',
+        credits: 3,
+        required: true
+      },
+      {
+        id: 3,
+        title: 'Mobile App Dev',
+        instructor: 'Dr. Lee',
+        credits: 2,
+        required: false
+      }
+    ];
+
+    // Individual course card
+    function CourseCard({
+      title,
+      instructor,
+      credits,
+      required,
+      isSelected,
+      onSelect
+    }) {
+      return (
+        <div className="course-card">
+
+          <div className="course-top">
+            <span>📚 Course</span>
+
+            <span className={`badge ${
+              required ? "required" : "elective"
+            }`}>
+              {required ? "필수" : "선택"}
+            </span>
+          </div>
+
+          <h3>{title}</h3>
+
+          <p className="instructor">
+            👨‍🏫 Instructor: {instructor}
+          </p>
+
+          <div className="course-footer">
+            <span className="credits">
+              {credits} Credits
+            </span>
+
+            <button
+              className={`select-btn ${isSelected ? "selected" : ""}`}
+              onClick={onSelect}
+            >
+              {isSelected ? "✓ Selected" : "+ Select"}
+            </button>
+          </div>
+
+        </div>
+      );
+    }
+
+    // Course catalog
+    function CourseCatalog() {
+      const [search, setSearch] = useState("");
+      const [filter, setFilter] = useState("All");
+      const [selected, setSelected] = useState([]);
+
+      function toggleCourse(id) {
+        setSelected(prev =>
+          prev.includes(id)
+            ? prev.filter(item => item !== id)
+            : [...prev, id]
+        );
+      }
+
+      const filteredCourses = courses.filter(course => {
+        const matchesSearch =
+          course.title.toLowerCase().includes(search.toLowerCase()) ||
+          course.instructor.toLowerCase().includes(search.toLowerCase());
+
+        const matchesFilter =
+          filter === "All" ||
+          (filter === "Required" && course.required) ||
+          (filter === "Elective" && !course.required);
+
+        return matchesSearch && matchesFilter;
+      });
+
+      const selectedCourses = courses.filter(course =>
+        selected.includes(course.id)
+      );
+
+      const totalCredits = selectedCourses.reduce(
+        (total, course) => total + course.credits,
+        0
+      );
+
+      const requiredCount = courses.filter(
+        course => course.required
+      ).length;
+
+      return (
+        <div className="container">
+
+          <div className="header">
+            <h1>🎓 Course Catalog</h1>
+            <p>Explore courses and build your semester schedule.</p>
+          </div>
+
+          <div className="summary">
+            <div className="summary-card">
+              <strong>{courses.length}</strong>
+              <span>Available Courses</span>
+            </div>
+
+            <div className="summary-card">
+              <strong>{requiredCount}</strong>
+              <span>Required Courses</span>
+            </div>
+
+            <div className="summary-card">
+              <strong>{totalCredits}</strong>
+              <span>Selected Credits</span>
+            </div>
+          </div>
+
+          <div className="toolbar">
+            <input
+              type="text"
+              placeholder="Search course or instructor..."
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+            />
+
+            <div className="filter">
+              {["All", "Required", "Elective"].map(item => (
+                <button
+                  key={item}
+                  className={filter === item ? "active" : ""}
+                  onClick={() => setFilter(item)}
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="course-grid">
+
+            {filteredCourses.length === 0 ? (
+              <div className="empty">
+                No courses found.
+              </div>
+            ) : (
+              filteredCourses.map(course => (
+                <CourseCard
+                  key={course.id}
+                  title={course.title}
+                  instructor={course.instructor}
+                  credits={course.credits}
+                  required={course.required}
+                  isSelected={selected.includes(course.id)}
+                  onSelect={() => toggleCourse(course.id)}
+                />
+              ))
+            )}
+
+          </div>
+
+          <div className="selected-section">
+            <h2>📋 My Selected Courses</h2>
+
+            {selectedCourses.length === 0 ? (
+              <p style={{ color: "#94a3b8" }}>
+                You haven't selected any courses yet.
+              </p>
+            ) : (
+              selectedCourses.map(course => (
+                <div className="selected-item" key={course.id}>
+                  <span>
+                    {course.title} ({course.credits} credits)
+                  </span>
+
+                  <button
+                    className="remove-btn"
+                    onClick={() => toggleCourse(course.id)}
+                  >
+                    Remove
+                  </button>
+                </div>
+              ))
+            )}
+
+            <div className="total">
+              Total Credits: {totalCredits}
+            </div>
+
+            <button
+              className="clear-btn"
+              onClick={() => setSelected([])}
+            >
+              Clear Selection
+            </button>
+          </div>
+
+        </div>
+      );
+    }
+
+    function App() {
+      return <CourseCatalog />;
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+</body>
+</html>
