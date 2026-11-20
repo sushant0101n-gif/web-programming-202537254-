@@ -15,59 +15,328 @@
       font-family: Arial, sans-serif;
       background: #f0f4f8;
       padding: 30px;
+      transition: 0.3s;
+    }
+
+    .dark {
+      background: #172033;
+      color: white;
     }
 
     .card {
       background: white;
+      color: #1e293b;
       border: 1px solid #bae6fd;
       border-radius: 10px;
-      padding: 16px 20px;
-      margin-bottom: 16px;
+      padding: 20px;
+      margin-bottom: 18px;
+      max-width: 650px;
     }
 
-    h3 {
-      margin-bottom: 10px;
+    .dark .card {
+      background: #273449;
+      color: white;
+      border-color: #475569;
+    }
+
+    h2, h3 {
+      margin-bottom: 12px;
+    }
+
+    button {
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 8px 13px;
+      border-radius: 5px;
+      margin: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    input {
+      padding: 8px;
+      margin: 5px;
+      border: 1px solid #cbd5e1;
+      border-radius: 5px;
+    }
+
+    li {
+      margin: 10px 0;
+    }
+
+    .delete {
+      background: #dc2626;
+    }
+
+    .delete:hover {
+      background: #b91c1c;
+    }
+
+    .status {
+      color: #16a34a;
+      font-weight: bold;
+    }
+
+    .progress {
+      background: #e2e8f0;
+      height: 10px;
+      border-radius: 10px;
+      margin: 12px 0;
+      overflow: hidden;
+    }
+
+    .bar {
+      background: #2563eb;
+      height: 100%;
+      transition: 0.3s;
+    }
+
+    .dark input {
+      background: #334155;
+      color: white;
     }
   </style>
 </head>
+
 <body>
 
   <div id="root"></div>
 
   <script type="text/babel">
 
+    const { useState } = React;
+
     function Card({ title, children }) {
+      const [show, setShow] = useState(true);
+
       return (
         <div className="card">
           <h3>{title}</h3>
-          {children}
+
+          <button onClick={() => setShow(!show)}>
+            {show ? "Hide ▲" : "Show ▼"}
+          </button>
+
+          {show && <div>{children}</div>}
         </div>
       );
     }
 
     function App() {
+      const [name, setName] = useState("Sushant Neupane");
+      const [intro, setIntro] = useState("Computer Engineering Student - Gachon University");
+
+      const [topics, setTopics] = useState([
+        "React Components",
+        "Props and State",
+        "JavaScript"
+      ]);
+
+      const [newTopic, setNewTopic] = useState("");
+
+      const [tasks, setTasks] = useState([
+        { id: 1, text: "Build a student portfolio component", done: false },
+        { id: 2, text: "Practice reusable components and props", done: false },
+        { id: 3, text: "Learn React useState", done: true }
+      ]);
+
+      const [newTask, setNewTask] = useState("");
+      const [likes, setLikes] = useState(0);
+      const [dark, setDark] = useState(false);
+      const [editing, setEditing] = useState(false);
+
+      const completed = tasks.filter(task => task.done).length;
+
+      function addTopic() {
+        if (newTopic.trim() !== "") {
+          setTopics([...topics, newTopic]);
+          setNewTopic("");
+        }
+      }
+
+      function deleteTopic(index) {
+        setTopics(topics.filter((topic, i) => i !== index));
+      }
+
+      function addTask() {
+        if (newTask.trim() !== "") {
+          setTasks([...tasks, {
+            id: Date.now(),
+            text: newTask,
+            done: false
+          }]);
+          setNewTask("");
+        }
+      }
+
+      function toggleTask(id) {
+        setTasks(tasks.map(task =>
+          task.id === id ? { ...task, done: !task.done } : task
+        ));
+      }
+
+      function deleteTask(id) {
+        setTasks(tasks.filter(task => task.id !== id));
+      }
+
+      function reset() {
+        setName("Sushant Neupane");
+        setIntro("Computer Engineering Student - Gachon University");
+        setTopics(["React Components", "Props and State", "JavaScript"]);
+        setTasks([
+          { id: 1, text: "Build a student portfolio component", done: false },
+          { id: 2, text: "Practice reusable components and props", done: false },
+          { id: 3, text: "Learn React useState", done: true }
+        ]);
+        setLikes(0);
+        setNewTopic("");
+        setNewTask("");
+      }
+
       return (
-        <div>
-          <h2>Sushant Neupane</h2>
-          <p>Computer Engineering Student - Gachon University</p>
+        <div className={dark ? "dark" : ""}>
 
-          <Card title="My Lecture Topics">
+          <button onClick={() => setDark(!dark)}>
+            {dark ? "☀️ Light Mode" : "🌙 Dark Mode"}
+          </button>
+
+          <h2>{name}</h2>
+          <p>{intro}</p>
+
+          <button onClick={() => setEditing(!editing)}>
+            {editing ? "Close Editor" : "Edit Profile"}
+          </button>
+
+          {editing && (
+            <div className="card">
+              <h3>Edit Profile</h3>
+
+              <input
+                value={name}
+                onChange={e => setName(e.target.value)}
+                placeholder="Enter your name"
+              />
+
+              <input
+                value={intro}
+                onChange={e => setIntro(e.target.value)}
+                placeholder="Enter introduction"
+              />
+            </div>
+          )}
+
+          <Card title="📚 My Lecture Topics">
+
             <ul>
-              <li>React Components</li>
-              <li>Props and State</li>
-              <li>JavaScript</li>
+              {topics.map((topic, index) => (
+                <li key={index}>
+                  {topic}
+                  <button className="delete"
+                    onClick={() => deleteTopic(index)}>
+                    Delete
+                  </button>
+                </li>
+              ))}
             </ul>
+
+            <input
+              value={newTopic}
+              onChange={e => setNewTopic(e.target.value)}
+              placeholder="Add a new topic"
+            />
+
+            <button onClick={addTopic}>Add Topic</button>
+
+            <p>Total Topics: {topics.length}</p>
+
           </Card>
 
-          <Card title="My Homework">
-            <p>Build a student portfolio component using React.</p>
-            <p>Practice reusable components and props.</p>
+          <Card title="📝 My Homework">
+
+            <p>Completed: {completed} / {tasks.length}</p>
+
+            <div className="progress">
+              <div
+                className="bar"
+                style={{
+                  width: tasks.length
+                    ? (completed / tasks.length * 100) + "%"
+                    : "0%"
+                }}
+              ></div>
+            </div>
+
+            <ul>
+              {tasks.map(task => (
+                <li key={task.id}>
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={task.done}
+                      onChange={() => toggleTask(task.id)}
+                    />
+
+                    <span style={{
+                      textDecoration: task.done ? "line-through" : "none"
+                    }}>
+                      {task.text}
+                    </span>
+                  </label>
+
+                  <button className="delete"
+                    onClick={() => deleteTask(task.id)}>
+                    Delete
+                  </button>
+                </li>
+              ))}
+            </ul>
+
+            <input
+              value={newTask}
+              onChange={e => setNewTask(e.target.value)}
+              placeholder="Add new homework"
+            />
+
+            <button onClick={addTask}>Add Homework</button>
+
+            <p className="status">
+              {tasks.length > 0 && completed === tasks.length
+                ? "All homework completed! 🎉"
+                : "Keep working! 💪"}
+            </p>
+
           </Card>
+
+          <Card title="❤️ My Activity">
+
+            <h3>Support My Work</h3>
+
+            <p>Likes: {likes}</p>
+
+            <button onClick={() => setLikes(likes + 1)}>
+              ❤️ Like
+            </button>
+
+            <button onClick={() => setLikes(0)}>
+              Reset Likes
+            </button>
+
+          </Card>
+
+          <button className="delete" onClick={reset}>
+            Reset Everything
+          </button>
+
         </div>
       );
     }
 
-    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+    ReactDOM.createRoot(document.getElementById("root"))
+      .render(<App />);
 
   </script>
 
