@@ -1,0 +1,37 @@
+function Card({ title, children }) {
+  return (
+    <div style={{
+      border: '1px solid #bae6fd',
+      borderRadius: 10,
+      padding: '16px 20px',
+      marginBottom: 16
+    }}>
+      <h3 style={{ marginBottom: 10 }}>{title}</h3>
+      {children}
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <div>
+      <h2>Sushant Neupane</h2>
+      <p>Computer Engineering Student - Gachon University</p>
+
+      <Card title="My Lecture Topics">
+        <ul>
+          <li>React Components</li>
+          <li>Props and State</li>
+          <li>JavaScript</li>
+        </ul>
+      </Card>
+
+      <Card title="My Homework">
+        <p>Build a student portfolio component using React.</p>
+        <p>Practice reusable components and props.</p>
+      </Card>
+    </div>
+  );
+}
+
+export default App;
