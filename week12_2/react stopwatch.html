@@ -1,0 +1,176 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>React Stopwatch - WebPro</title>
+
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f4ff;
+      color: #1a2540;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: 60px auto;
+      padding: 35px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    h1 {
+      color: #1a56db;
+    }
+
+    .timer {
+      font-size: 55px;
+      font-weight: bold;
+      margin: 30px 0;
+      color: #1a2540;
+    }
+
+    .status {
+      color: #68748d;
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 12px 22px;
+      margin: 6px;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    .start {
+      background: #16a34a;
+    }
+
+    .stop {
+      background: #dc2626;
+    }
+
+    .reset {
+      background: #1a56db;
+    }
+
+    button:hover {
+      opacity: 0.85;
+    }
+
+    button:disabled {
+      background: #aaa;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    function Stopwatch() {
+      const [seconds, setSeconds] = useState(0);
+      const [running, setRunning] = useState(false);
+
+      useEffect(() => {
+        if (!running) return;
+
+        const id = setInterval(() => {
+          setSeconds(s => s + 1);
+        }, 1000);
+
+        return () => {
+          clearInterval(id);
+        };
+      }, [running]);
+
+      function handleStart() {
+        setRunning(true);
+      }
+
+      function handleStop() {
+        setRunning(false);
+      }
+
+      function handleReset() {
+        setRunning(false);
+        setSeconds(0);
+      }
+
+      return (
+        <div className="container">
+          <h1>React Stopwatch</h1>
+
+          <p className="status">
+            {running ? 'Stopwatch is running...' : 'Stopwatch is stopped'}
+          </p>
+
+          <div className="timer">
+            {seconds}s
+          </div>
+
+          <button
+            className="start"
+            onClick={handleStart}
+            disabled={running}
+          >
+            Start
+          </button>
+
+          <button
+            className="stop"
+            onClick={handleStop}
+            disabled={!running}
+          >
+            Stop
+          </button>
+
+          <button
+            className="reset"
+            onClick={handleReset}
+          >
+            Reset
+          </button>
+
+          <p>Total elapsed time: {seconds} seconds</p>
+        </div>
+      );
+    }
+
+    function App() {
+      return (
+        <div>
+          <Stopwatch />
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(
+      document.getElementById('root')
+    );
+
+    root.render(<App />);
+  </script>
+
+</body>
+</html>
