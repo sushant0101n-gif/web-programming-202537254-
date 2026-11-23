@@ -145,14 +145,17 @@
         const relativePath = filePath.join("/");
         const isWeek12 = folder.toLowerCase() === "week12";
         const isWeek12_2 = folder.toLowerCase() === "week12_2";
-        const isBuiltShoppingCart = relativePath.toLowerCase() === "dist/index.html";
+        const isBuiltWeek12 = relativePath.toLowerCase() === "dist/index.html";
+        const isBuiltWeek12_2 = relativePath.toLowerCase() === "dist/index.html"
+          || relativePath.toLowerCase() === "weather-dashboard/dist/index.html";
 
         // Hide source/template pages that render blank on GitHub Pages.
         if (isWeek12 && relativePath.toLowerCase() === "index.html") continue;
         if (isWeek12_2 && relativePath.toLowerCase() === "index.html") continue;
-        // For Week 12, list its direct exercise pages and the built shopping cart.
-        // Hide unrelated nested HTML files.
-        if (isWeek12 && filePath.length > 1 && !isBuiltShoppingCart) continue;
+
+        // Only show direct exercises and built dist pages for Week 12 projects.
+        if (isWeek12 && filePath.length > 1 && !isBuiltWeek12) continue;
+        if (isWeek12_2 && filePath.length > 1 && !isBuiltWeek12_2) continue;
 
         if (!filesByWeek.has(folder)) filesByWeek.set(folder, []);
         filesByWeek.get(folder).push(item.path);
