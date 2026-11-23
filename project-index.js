@@ -24,7 +24,8 @@
       "week12/toogle visibility.html": "Exercise 1 — Toggle visibility",
       "week12/add remove item.html": "Exercise 2 — Add & remove items from a list",
       "week12/lift state between 2 counter.html": "Exercise 3 — Lift state between two counters",
-      "week12_2/dist/index.html": "GitHub User Lookup"
+      "week12_2/dist/index.html": "GitHub User Lookup",
+      "week12_2/weather-dashboard/dist/index.html": "Weather Dashboard"
     };
     if (week12Labels[normalizedPath]) return week12Labels[normalizedPath];
 
