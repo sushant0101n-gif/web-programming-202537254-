@@ -25,7 +25,8 @@
       "week12/add remove item.html": "Exercise 2 — Add & remove items from a list",
       "week12/lift state between 2 counter.html": "Exercise 3 — Lift state between two counters",
       "week12_2/dist/index.html": "GitHub User Lookup",
-      "week12_2/weather-dashboard/dist/index.html": "Weather Dashboard"
+      "week12_2/weather-dashboard/dist/index.html": "Weather Dashboard",
+      "week12_2/counter with history.html": "Counter with History"
     };
     if (week12Labels[normalizedPath]) return week12Labels[normalizedPath];
 
@@ -127,14 +128,10 @@
         cache: "no-store"
       });
 
-      if (!response.ok) {
-        throw new Error(`GitHub returned HTTP ${response.status}`);
-      }
+      if (!response.ok) throw new Error(`GitHub returned HTTP ${response.status}`);
 
       const data = await response.json();
-      if (!Array.isArray(data.tree)) {
-        throw new Error("GitHub returned an invalid repository file list");
-      }
+      if (!Array.isArray(data.tree)) throw new Error("GitHub returned an invalid repository file list");
 
       const filesByWeek = new Map();
       for (const item of data.tree) {
@@ -143,19 +140,23 @@
         if (filePath.length === 0 || !weekFolderPattern.test(folder)) continue;
 
         const relativePath = filePath.join("/");
+        const normalizedRelativePath = relativePath.toLowerCase();
         const isWeek12 = folder.toLowerCase() === "week12";
         const isWeek12_2 = folder.toLowerCase() === "week12_2";
-        const isBuiltWeek12 = relativePath.toLowerCase() === "dist/index.html";
-        const isBuiltWeek12_2 = relativePath.toLowerCase() === "dist/index.html"
-          || relativePath.toLowerCase() === "weather-dashboard/dist/index.html";
 
-        // Hide source/template pages that render blank on GitHub Pages.
-        if (isWeek12 && relativePath.toLowerCase() === "index.html") continue;
-        if (isWeek12_2 && relativePath.toLowerCase() === "index.html") continue;
+        if (isWeek12 && normalizedRelativePath === "index.html") continue;
 
-        // Only show direct exercises and built dist pages for Week 12 projects.
-        if (isWeek12 && filePath.length > 1 && !isBuiltWeek12) continue;
-        if (isWeek12_2 && filePath.length > 1 && !isBuiltWeek12_2) continue;
+        if (isWeek12_2) {
+          const allowedWeek12_2Paths = new Set([
+            "counter with history.html",
+            "dist/index.html",
+            "weather-dashboard/dist/index.html"
+          ]);
+          if (!allowedWeek12_2Paths.has(normalizedRelativePath)) continue;
+        } else if (isWeek12) {
+          const isBuiltShoppingCart = normalizedRelativePath === "dist/index.html";
+          if (filePath.length > 1 && !isBuiltShoppingCart) continue;
+        }
 
         if (!filesByWeek.has(folder)) filesByWeek.set(folder, []);
         filesByWeek.get(folder).push(item.path);
