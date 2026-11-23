@@ -147,12 +147,12 @@
         if (isWeek12 && normalizedRelativePath === "index.html") continue;
 
         if (isWeek12_2) {
-          const allowedWeek12_2Paths = new Set([
-            "counter with history.html",
-            "dist/index.html",
-            "weather-dashboard/dist/index.html"
-          ]);
-          if (!allowedWeek12_2Paths.has(normalizedRelativePath)) continue;
+          const isDirectProjectPage = filePath.length === 1
+            && normalizedRelativePath !== "index.html";
+          const isBuiltWeek12_2Page = normalizedRelativePath === "dist/index.html"
+            || normalizedRelativePath === "weather-dashboard/dist/index.html";
+          // Show direct exercise pages and built apps, but hide source index pages and nested source files.
+          if (!isDirectProjectPage && !isBuiltWeek12_2Page) continue;
         } else if (isWeek12) {
           const isBuiltShoppingCart = normalizedRelativePath === "dist/index.html";
           if (filePath.length > 1 && !isBuiltShoppingCart) continue;
