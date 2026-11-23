@@ -1,0 +1,157 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Profile - WebPro</title>
+
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f4ff;
+      color: #1a2540;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: 50px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #1a56db;
+    }
+
+    .profile {
+      background: #f0f4ff;
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+
+    .profile h2 {
+      margin-top: 0;
+    }
+
+    .loading {
+      text-align: center;
+      color: #1a56db;
+      font-size: 18px;
+    }
+
+    .error {
+      background: #ffecec;
+      color: #d93025;
+      padding: 12px;
+      border-radius: 6px;
+    }
+
+    button {
+      background: #1a56db;
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+
+    button:hover {
+      background: #123fa8;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    function UserProfile() {
+      const [user, setUser] = useState(null);
+      const [loading, setLoading] = useState(true);
+      const [error, setError] = useState(null);
+
+      useEffect(() => {
+        async function fetchUser() {
+          try {
+            const res = await fetch(
+              'https://jsonplaceholder.typicode.com/users/1'
+            );
+
+            if (!res.ok) {
+              throw new Error('Failed to fetch user data');
+            }
+
+            const data = await res.json();
+            setUser(data);
+
+          } catch (err) {
+            setError(err.message);
+
+          } finally {
+            setLoading(false);
+          }
+        }
+
+        fetchUser();
+      }, []);
+
+      if (loading) {
+        return (
+          <p className="loading">Loading...</p>
+        );
+      }
+
+      if (error) {
+        return (
+          <div className="error">
+            <p>Error: {error}</p>
+          </div>
+        );
+      }
+
+      return (
+        <div className="profile">
+          <h2>{user.name}</h2>
+          <p><strong>Email:</strong> {user.email}</p>
+        </div>
+      );
+    }
+
+    function App() {
+      return (
+        <div className="container">
+          <h1>User Profile</h1>
+          <p>Fetching user information from JSONPlaceholder API.</p>
+
+          <UserProfile />
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(
+      document.getElementById('root')
+    );
+
+    root.render(<App />);
+  </script>
+
+</body>
+</html>
