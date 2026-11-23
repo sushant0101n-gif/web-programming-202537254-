@@ -1,0 +1,170 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebPro</title>
+
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f4ff;
+      padding: 40px;
+      color: #1a2540;
+    }
+
+    .container {
+      max-width: 550px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    h1, h2 {
+      text-align: center;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 15px 0;
+      border: 1px solid #aaa;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 10px 15px;
+      margin: 5px;
+      border: none;
+      border-radius: 6px;
+      background: #1a56db;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #123fa8;
+    }
+
+    .preview {
+      background: #f0f4ff;
+      padding: 15px;
+      margin-top: 20px;
+      border-radius: 8px;
+    }
+
+    .warning {
+      color: #d93025;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    function TitleEditor({ initialText = '' }) {
+      const [text, setText] = useState(initialText);
+      const [showPreview, setShowPreview] = useState(true);
+
+      useEffect(() => {
+        document.title = text.trim() || 'WebPro';
+
+        return () => {
+          document.title = 'WebPro';
+        };
+      }, [text]);
+
+      function handleChange(e) {
+        setText(e.target.value);
+      }
+
+      function handleClear() {
+        setText('');
+      }
+
+      function handlePreview() {
+        setShowPreview(!showPreview);
+      }
+
+      return (
+        <div>
+          <h2>Browser Title Editor</h2>
+
+          <p>Type something to change your browser tab title.</p>
+
+          <input
+            type="text"
+            value={text}
+            onChange={handleChange}
+            placeholder="Enter a new page title..."
+          />
+
+          <button onClick={handleClear}>
+            Clear Text
+          </button>
+
+          <button onClick={handlePreview}>
+            {showPreview ? 'Hide Preview' : 'Show Preview'}
+          </button>
+
+          <p>Characters: {text.length}</p>
+
+          {showPreview && (
+            <div className="preview">
+              <h3>Title Preview</h3>
+              <p>{text || 'WebPro'}</p>
+            </div>
+          )}
+
+          {text.length > 30 && (
+            <p className="warning">
+              Your title is getting long!
+            </p>
+          )}
+        </div>
+      );
+    }
+
+    function App() {
+      const [showEditor, setShowEditor] = useState(true);
+
+      return (
+        <div className="container">
+          <h1>Web Programming</h1>
+
+          <button onClick={() => setShowEditor(!showEditor)}>
+            {showEditor ? 'Unmount Component' : 'Mount Component'}
+          </button>
+
+          {showEditor && (
+            <TitleEditor initialText="My React Page" />
+          )}
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(
+      document.getElementById('root')
+    );
+
+    root.render(<App />);
+  </script>
+
+</body>
+</html>
