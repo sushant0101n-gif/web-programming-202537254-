@@ -1,0 +1,194 @@
+
+.app {
+  max-width: 1050px;
+  margin: auto;
+  padding: 35px 20px;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+header h1 {
+  color: #58a6ff;
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+header p {
+  color: #8b949e;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 12px;
+  padding: 5px 15px;
+  margin-bottom: 30px;
+}
+
+.search-box input {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 15px 0;
+  color: white;
+  font-size: 16px;
+}
+
+.search-box button {
+  background: #238636;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.welcome {
+  text-align: center;
+  padding: 55px 20px;
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 15px;
+}
+
+.welcome h2 {
+  margin-bottom: 15px;
+}
+
+.welcome p {
+  color: #8b949e;
+  margin-bottom: 20px;
+}
+
+.welcome h3 {
+  color: #58a6ff;
+}
+
+.profile-card {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 15px;
+  padding: 25px;
+  margin-top: 25px;
+}
+
+.profile-card img {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  border: 3px solid #58a6ff;
+}
+
+.profile-details h2 {
+  margin-bottom: 8px;
+}
+
+.profile-details p {
+  color: #8b949e;
+  margin: 10px 0;
+}
+
+.login {
+  color: #58a6ff !important;
+}
+
+.extra-info {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin: 15px 0;
+  color: #8b949e;
+}
+
+.github-link {
+  display: inline-block;
+  background: #238636;
+  color: white;
+  text-decoration: none;
+  padding: 10px 15px;
+  border-radius: 7px;
+  margin-top: 8px;
+}
+
+.loading {
+  text-align: center;
+  padding: 35px;
+  color: #58a6ff;
+}
+
+.spinner {
+  width: 35px;
+  height: 35px;
+  border: 4px solid #30363d;
+  border-top-color: #58a6ff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: auto auto 15px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.error {
+  background: #351b20;
+  border: 1px solid #f85149;
+  color: #ff7b72;
+  padding: 15px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .profile-card {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-top: 25px;
+}
+
+.stat-card {
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 12px;
+  padding: 22px;
+  text-align: center;
+}
+
+.stat-card span {
+  font-size: 28px;
+}
+
+.stat-card p {
+  color: #8b949e;
+  margin: 12px 0;
+}
+
+.stat-card h2 {
+  color: #58a6ff;
+  font-size: 28px;
+}
+
+@media (max-width: 600px) {
+  .stats {
+    grid-template-columns: 1fr;
+  }
+}
