@@ -13,6 +13,8 @@ function App() {
   const [city, setCity] = useState('Seoul');
   const [searchCity, setSearchCity] = useState('Seoul');
   const [weather, setWeather] = useState(null);
+  const [latitude, setLatitude] = useState(null);
+const [longitude, setLongitude] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [savedCities, setSavedCities] = useState([]);
@@ -33,7 +35,8 @@ function App() {
         }
 
         const location = geoData.results[0];
-
+setLatitude(location.latitude);
+setLongitude(location.longitude);
         const weatherURL = `https://api.open-meteo.com/v1/forecast?latitude=${location.latitude}&longitude=${location.longitude}&current=temperature_2m,wind_speed_10m,relative_humidity_2m,weather_code`;
 
         const weatherResponse = await fetch(weatherURL);
@@ -148,11 +151,13 @@ function selectCity(name) {
 
             {weather && !loading && (
               <>
-               <WeatherCard
+ <WeatherCard
   city={city}
   temperature={weather.temperature_2m}
   description={getDescription(weather.weather_code)}
   icon={getWeatherIcon(weather.weather_code)}
+  latitude={latitude}
+  longitude={longitude}
 />
 
                 <div className="stats">
