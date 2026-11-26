@@ -111,27 +111,43 @@ function App() {
     }
   }
 
-  function getDescription(code) {
-    if (code === 0) return 'Clear Sky ☀️';
-    if (code <= 3) return 'Cloudy ⛅';
-    if (code <= 48) return 'Fog 🌫️';
-    if (code <= 67) return 'Rain 🌧️';
-    if (code <= 77) return 'Snow ❄️';
-    if (code <= 82) return 'Rain Showers 🌦️';
-    if (code >= 95) return 'Thunderstorm ⛈️';
-    return 'Unknown Weather';
-  }
+function getDescription(code) {
+  if (code === 0) return 'Clear Sky';
+  if (code === 1) return 'Mainly Clear';
+  if (code === 2) return 'Partly Cloudy';
+  if (code === 3) return 'Overcast';
+  if (code === 45 || code === 48) return 'Fog';
+  if (code === 51) return 'Light Drizzle';
+  if (code === 53) return 'Moderate Drizzle';
+  if (code === 55) return 'Dense Drizzle';
+  if (code === 56 || code === 57) return 'Freezing Drizzle';
+  if (code === 61) return 'Slight Rain';
+  if (code === 63) return 'Moderate Rain';
+  if (code === 65) return 'Heavy Rain';
+  if (code === 66 || code === 67) return 'Freezing Rain';
+  if (code === 71) return 'Slight Snow';
+  if (code === 73) return 'Moderate Snow';
+  if (code === 75 || code === 77) return 'Heavy Snow';
+  if (code === 80) return 'Slight Rain Showers';
+  if (code === 81) return 'Moderate Rain Showers';
+  if (code === 82) return 'Violent Rain Showers';
+  if (code === 85 || code === 86) return 'Snow Showers';
+  if (code >= 95) return 'Thunderstorm';
+  return 'Unknown Weather';
+}
 
-  function getWeatherIcon(code) {
-    if (code === 0) return '☀️';
-    if (code <= 3) return '⛅';
-    if (code <= 48) return '🌫️';
-    if (code <= 67) return '🌧️';
-    if (code <= 77) return '❄️';
-    if (code <= 82) return '🌦️';
-    if (code >= 95) return '⛈️';
-    return '🌤️';
-  }
+function getWeatherIcon(code) {
+  if (code === 0) return '☀️';
+  if (code === 1 || code === 2) return '⛅';
+  if (code === 3) return '☁️';
+  if (code === 45 || code === 48) return '🌫️';
+  if (code >= 51 && code <= 67) return '🌧️';
+  if (code >= 71 && code <= 77) return '❄️';
+  if (code >= 80 && code <= 82) return '🌦️';
+  if (code === 85 || code === 86) return '🌨️';
+  if (code >= 95) return '⛈️';
+  return '🌤️';
+}
 
   function saveCity() {
     if (!weather) return;
@@ -221,7 +237,7 @@ function App() {
                 <div className="stats">
                   <StatCard title="Wind Speed" value={`${weather.wind_speed_10m} km/h`} icon="💨" />
                   <StatCard title="Humidity" value={`${weather.relative_humidity_2m}%`} icon="💧" />
-                  <StatCard title="Weather Code" value={weather.weather_code} icon="🌤️" />
+                  <StatCard title="Weather Code" value={weather.weather_code} icon={getWeatherIcon(weather.weather_code)} />
                 </div>
 
                 <button className="save-button" onClick={saveCity}>
