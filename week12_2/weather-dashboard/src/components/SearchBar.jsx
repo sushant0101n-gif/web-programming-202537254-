@@ -1,7 +1,7 @@
 
 function SearchBar({ city, setCity, onSearch, loading, latitude, setLatitude, longitude, setLongitude, onCoordinateSearch }) {
   return (
-    <>
+    <div>
       <form className="search-bar" onSubmit={onSearch}>
         <input
           type="text"
@@ -15,11 +15,18 @@ function SearchBar({ city, setCity, onSearch, loading, latitude, setLatitude, lo
         </button>
       </form>
 
-      <form className="search-bar" onSubmit={onCoordinateSearch}>
+      <h3 style={{ marginTop: '20px', marginBottom: '10px' }}>
+        Search Weather by Coordinates
+      </h3>
+
+      <form
+        className="search-bar"
+        onSubmit={onCoordinateSearch}
+      >
         <input
           type="number"
           step="any"
-          placeholder="Latitude"
+          placeholder="Enter Latitude (e.g. 27.7172)"
           value={latitude}
           onChange={e => setLatitude(e.target.value)}
         />
@@ -27,7 +34,7 @@ function SearchBar({ city, setCity, onSearch, loading, latitude, setLatitude, lo
         <input
           type="number"
           step="any"
-          placeholder="Longitude"
+          placeholder="Enter Longitude (e.g. 85.3240)"
           value={longitude}
           onChange={e => setLongitude(e.target.value)}
         />
@@ -36,7 +43,7 @@ function SearchBar({ city, setCity, onSearch, loading, latitude, setLatitude, lo
           Search Coordinates
         </button>
       </form>
-    </>
+    </div>
   );
 }
 
