@@ -1,0 +1,633 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Multi-Step Registration</title>
+
+<!-- React CDN -->
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #eef2ff;
+  color: #1e293b;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 25px;
+}
+
+.container {
+  background: white;
+  width: 100%;
+  max-width: 650px;
+  padding: 35px;
+  border-radius: 18px;
+  box-shadow: 0 10px 35px rgba(0,0,0,0.08);
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 10px;
+  color: #1e3a8a;
+}
+
+.subtitle {
+  text-align: center;
+  color: #64748b;
+  margin-bottom: 30px;
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.progress {
+  height: 9px;
+  background: #e2e8f0;
+  border-radius: 20px;
+  overflow: hidden;
+  margin-bottom: 30px;
+}
+
+.progress-bar {
+  height: 100%;
+  background: #2563eb;
+  transition: width 0.3s;
+}
+
+h2 {
+  margin-bottom: 22px;
+  color: #1e40af;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+input:not([type="radio"]):not([type="checkbox"]) {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 15px;
+  outline: none;
+}
+
+input:focus {
+  border-color: #2563eb;
+}
+
+.error {
+  color: #dc2626;
+  font-size: 13px;
+  margin-top: 6px;
+}
+
+.roles {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.role-option {
+  border: 1px solid #cbd5e1;
+  padding: 13px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.role-option:has(input:checked) {
+  border-color: #2563eb;
+  background: #eff6ff;
+}
+
+.role-option input {
+  margin-right: 8px;
+}
+
+.notification {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 25px;
+}
+
+.notification input {
+  width: 17px;
+  height: 17px;
+}
+
+.notification label {
+  margin: 0;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 30px;
+}
+
+button {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button:hover {
+  opacity: 0.85;
+}
+
+.next-btn {
+  background: #2563eb;
+  color: white;
+  margin-left: auto;
+}
+
+.prev-btn {
+  background: #e2e8f0;
+  color: #334155;
+}
+
+.summary {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 12px 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.summary-row:last-child {
+  border-bottom: none;
+}
+
+.summary-row span:first-child {
+  font-weight: bold;
+}
+
+.summary-row span:last-child {
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.success {
+  text-align: center;
+  padding: 35px;
+}
+
+.success h2 {
+  color: #16a34a;
+  margin-bottom: 15px;
+}
+
+.success p {
+  margin-bottom: 12px;
+  color: #64748b;
+}
+
+@media(max-width: 500px) {
+  .container {
+    padding: 22px;
+  }
+
+  .roles {
+    grid-template-columns: 1fr;
+  }
+
+  .summary-row {
+    font-size: 14px;
+  }
+
+  button {
+    padding: 11px 17px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div id="root"></div>
+
+<script type="text/babel">
+
+const { useState } = React;
+
+// Reusable input component using props
+function FormInput({ label, type, value, onChange, error, placeholder }) {
+  return (
+    <div className="form-group">
+      <label>{label}</label>
+
+      <input
+        type={type}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+      />
+
+      {error && <p className="error">{error}</p>}
+    </div>
+  );
+}
+
+// Step 1: Personal information
+function PersonalInfo({ data, update, errors }) {
+  return (
+    <div>
+      <h2>Step 1: Personal Information</h2>
+
+      <FormInput
+        label="Full Name"
+        type="text"
+        value={data.name}
+        onChange={e => update("name", e.target.value)}
+        error={errors.name}
+        placeholder="Enter your full name"
+      />
+
+      <FormInput
+        label="Email Address"
+        type="email"
+        value={data.email}
+        onChange={e => update("email", e.target.value)}
+        error={errors.email}
+        placeholder="example@email.com"
+      />
+    </div>
+  );
+}
+
+// Step 2: Account details
+function AccountInfo({ data, update, errors }) {
+  return (
+    <div>
+      <h2>Step 2: Account Details</h2>
+
+      <FormInput
+        label="Username"
+        type="text"
+        value={data.username}
+        onChange={e => update("username", e.target.value)}
+        error={errors.username}
+        placeholder="Choose a username"
+      />
+
+      <FormInput
+        label="Password"
+        type="password"
+        value={data.password}
+        onChange={e => update("password", e.target.value)}
+        error={errors.password}
+        placeholder="Minimum 8 characters"
+      />
+
+      <FormInput
+        label="Confirm Password"
+        type="password"
+        value={data.confirmPassword}
+        onChange={e => update("confirmPassword", e.target.value)}
+        error={errors.confirmPassword}
+        placeholder="Enter password again"
+      />
+    </div>
+  );
+}
+
+// Step 3: Preferences
+function Preferences({ data, update }) {
+  const roles = ["Student", "TA", "Professor", "Parents", "Staff"];
+
+  return (
+    <div>
+      <h2>Step 3: Preferences</h2>
+
+      <div className="form-group">
+        <label>Select Your Role</label>
+
+        <div className="roles">
+          {roles.map(role => (
+            <label className="role-option" key={role}>
+              <input
+                type="radio"
+                name="role"
+                value={role}
+                checked={data.role === role}
+                onChange={e => update("role", e.target.value)}
+              />
+              {role}
+            </label>
+          ))}
+        </div>
+      </div>
+
+      <div className="notification">
+        <input
+          type="checkbox"
+          id="notification"
+          checked={data.notification}
+          onChange={e => update("notification", e.target.checked)}
+        />
+
+        <label htmlFor="notification">
+          Receive notifications
+        </label>
+      </div>
+    </div>
+  );
+}
+
+// Read-only review component
+function Review({ data }) {
+  const details = [
+    ["Full Name", data.name],
+    ["Email", data.email],
+    ["Username", data.username],
+    ["Password", "••••••••"],
+    ["Role", data.role],
+    ["Notifications", data.notification ? "Yes" : "No"]
+  ];
+
+  return (
+    <div>
+      <h2>Review Your Information</h2>
+
+      <div className="summary">
+        {details.map(([label, value]) => (
+          <div className="summary-row" key={label}>
+            <span>{label}</span>
+            <span>{value || "-"}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// Main application component
+function App() {
+  const [step, setStep] = useState(1);
+  const [submitted, setSubmitted] = useState(false);
+
+  const [data, setData] = useState({
+    name: "",
+    email: "",
+    username: "",
+    password: "",
+    confirmPassword: "",
+    role: "Student",
+    notification: false
+  });
+
+  const [errors, setErrors] = useState({});
+
+  // Update form data
+  function update(field, value) {
+    setData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+
+    setErrors(prev => ({
+      ...prev,
+      [field]: ""
+    }));
+  }
+
+  // Validate current step
+  function validateStep() {
+    let newErrors = {};
+
+    if (step === 1) {
+      if (data.name.trim().length < 2) {
+        newErrors.name = "Name must be at least 2 characters.";
+      }
+
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
+        newErrors.email = "Please enter a valid email address.";
+      }
+    }
+
+    if (step === 2) {
+      if (data.username.length < 3 || /\s/.test(data.username)) {
+        newErrors.username = "Username must be at least 3 characters with no spaces.";
+      }
+
+      if (data.password.length < 8) {
+        newErrors.password = "Password must be at least 8 characters.";
+      }
+
+      if (data.confirmPassword !== data.password) {
+        newErrors.confirmPassword = "Passwords do not match.";
+      }
+    }
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
+  }
+
+  // Go to next step
+  function nextStep() {
+    if (validateStep()) {
+      setStep(prev => prev + 1);
+    }
+  }
+
+  // Go to previous step
+  function previousStep() {
+    setErrors({});
+    setStep(prev => prev - 1);
+  }
+
+  // Complete registration
+  function register() {
+    setSubmitted(true);
+  }
+
+  // Return to the beginning and reset the form
+  function returnHome() {
+    setData({
+      name: "",
+      email: "",
+      username: "",
+      password: "",
+      confirmPassword: "",
+      role: "Student",
+      notification: false
+    });
+
+    setErrors({});
+    setStep(1);
+    setSubmitted(false);
+  }
+
+  // Display the correct step component
+  function renderStep() {
+    if (step === 1) {
+      return (
+        <PersonalInfo
+          data={data}
+          update={update}
+          errors={errors}
+        />
+      );
+    }
+
+    if (step === 2) {
+      return (
+        <AccountInfo
+          data={data}
+          update={update}
+          errors={errors}
+        />
+      );
+    }
+
+    return (
+      <Preferences
+        data={data}
+        update={update}
+      />
+    );
+  }
+
+  // Success screen
+  if (submitted) {
+    return (
+      <div className="container success">
+
+        <h2>Registration Successful!</h2>
+
+        <p>Welcome, {data.name}!</p>
+
+        <p>
+          Your registration information has been completed.
+        </p>
+
+        <div className="buttons" style={{ justifyContent: "center" }}>
+
+          <button
+            className="prev-btn"
+            onClick={() => setSubmitted(false)}
+          >
+            Go Back
+          </button>
+
+          <button
+            className="next-btn"
+            onClick={returnHome}
+            style={{ marginLeft: "0" }}
+          >
+            Return Home
+          </button>
+
+        </div>
+      </div>
+    );
+  }
+
+  // Main registration screen
+  return (
+    <div className="container">
+
+      <h1>Registration Form</h1>
+
+      <p className="subtitle">
+        Complete all three steps to register
+      </p>
+
+      <div className="progress-info">
+        <span>Step {step} of 3</span>
+        <span>{Math.round(step / 3 * 100)}%</span>
+      </div>
+
+      <div className="progress">
+        <div
+          className="progress-bar"
+          style={{ width: `${step / 3 * 100}%` }}
+        ></div>
+      </div>
+
+      {renderStep()}
+
+      {step === 3 && (
+        <Review data={data} />
+      )}
+
+      <div className="buttons">
+
+        {step > 1 && (
+          <button
+            className="prev-btn"
+            onClick={previousStep}
+          >
+            Previous
+          </button>
+        )}
+
+        {step < 3 ? (
+          <button
+            className="next-btn"
+            onClick={nextStep}
+          >
+            Next
+          </button>
+        ) : (
+          <button
+            className="next-btn"
+            onClick={register}
+          >
+            Register
+          </button>
+        )}
+
+      </div>
+
+    </div>
+  );
+}
+
+// Render React application
+ReactDOM.createRoot(
+  document.getElementById("root")
+).render(<App />);
+
+</script>
+
+</body>
+</html>
