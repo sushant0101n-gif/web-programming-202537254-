@@ -1,5 +1,5 @@
-// Static project index: curated task list, with no automatic repository scanning.
-(() => {
+// Curated task index. New weeks are discovered using a narrow path rule so source/build files don't leak into the page.
+(async () => {
   const weekList = document.querySelector("#week-list");
   const searchInput = document.querySelector("#project-search");
   const resultCount = document.querySelector("#result-count");
@@ -29,35 +29,78 @@
     { week: 13, title: "Week 13 · Part 1", code: "13A", files: [["Course feedback form","week13_1/course-feedback-form/dist/index.html"],["Student profile editor","week13_1/student-profile-editor/dist/index.html"],["Live character counter","week13_1/bio-field/dist/index.html"],["Contact form with validation","week13_1/contact-form-with-validation/dist/index.html"],["Skill Checklist with Counter","week13_1/skill-checklist-with-counter/dist/index.html"]] }
   ];
 
-  let activeDialog;
-
-  function openTask(label, path) {
-    const encodedPath = path.split("/").map(encodeURIComponent).join("/");
-    if (!activeDialog) {
-      activeDialog = document.createElement("section");
-      activeDialog.id = "task-viewer";
-      activeDialog.className = "task-viewer";
-      activeDialog.hidden = true;
-      activeDialog.innerHTML = `<div class="task-viewer-bar"><strong id="task-viewer-title"></strong><button type="button" id="task-viewer-close" aria-label="Close task">×</button></div><iframe id="task-frame" title="Selected task"></iframe>`;
-      document.querySelector("main").append(activeDialog);
-      document.getElementById("task-viewer-close").addEventListener("click", closeTask);
-    }
-
-    document.getElementById("task-viewer-title").textContent = label;
-    document.getElementById("task-frame").src = encodedPath;
-    activeDialog.hidden = false;
-    activeDialog.scrollIntoView({ behavior: "smooth", block: "start" });
+  function taskLabel(path) {
+    const parts = path.split("/");
+    const base = parts[parts.length - 1].toLowerCase() === "index.html" ? parts[parts.length - 2] : parts[parts.length - 1].replace(/\.html?$/i, "");
+    return base.replace(/[-_]+/g, " ").replace(/\s+/g, " ").trim().replace(/\b\w/g, c => c.toUpperCase());
   }
 
-  function closeTask() {
-    if (!activeDialog) return;
-    document.getElementById("task-frame").removeAttribute("src");
-    activeDialog.hidden = true;
+  async function discoverFutureWeeks() {
+    const response = await fetch("https://api.github.com/repos/sushant0101n-gif/web-programming-202537254-/git/trees/main?recursive=1", { headers: { Accept: "application/vnd.github+json" } });
+    if (!response.ok) throw new Error(`GitHub API returned ${response.status}`);
+    const result = await response.json();
+    if (result.truncated) throw new Error("Repository tree is truncated");
+
+    const futureFolders = new Map();
+    for (const item of result.tree) {
+      if (item.type !== "blob") continue;
+      const parts = item.path.split("/");
+      const folder = parts[0];
+      const weekMatch = folder.match(/^week[_-]?(\d+)(?:[_-](\d+))?$/i);
+      if (!weekMatch || Number(weekMatch[1]) <= 13) continue;
+
+      // Include only HTML files directly in the week folder, or a built task's dist/index.html.
+      // This intentionally excludes src, dependencies, and arbitrary nested HTML files.
+      const isDirectHtml = parts.length === 2 && /\.html?$/i.test(parts[1]);
+      const isBuiltTask = parts.length === 4 && parts[2].toLowerCase() === "dist" && parts[3].toLowerCase() === "index.html";
+      if (!isDirectHtml && !isBuiltTask) continue;
+
+      const week = Number(weekMatch[1]);
+      const part = weekMatch[2] ? Number(weekMatch[2]) : null;
+      const key = folder.toLowerCase();
+      if (!futureFolders.has(key)) {
+        futureFolders.set(key, {
+          week,
+          title: part ? `Week ${week} · Part ${part}` : `Week ${week}`,
+          code: part ? `${String(week).padStart(2, "0")}${String.fromCharCode(64 + part)}` : undefined,
+          files: []
+        });
+      }
+      futureFolders.get(key).files.push([taskLabel(item.path), item.path]);
+    }
+
+    projects.push(...futureFolders.values());
+    projects.sort((a, b) => a.week - b.week || (a.code || "").localeCompare(b.code || ""));
+  }
+
+  try {
+    await discoverFutureWeeks();
+  } catch (error) {
+    // Keep the curated index working when the public GitHub API is unavailable.
+    console.warn("Could not load new week folders; showing the saved tasks only.", error);
+  }
+
+  let activeViewer;
+  function openTask(label, path) {
+    if (!activeViewer) {
+      activeViewer = document.createElement("section");
+      activeViewer.className = "task-viewer";
+      activeViewer.hidden = true;
+      activeViewer.innerHTML = `<div class="task-viewer-bar"><strong id="task-viewer-title"></strong><button type="button" id="task-viewer-close" aria-label="Close task">×</button></div><iframe id="task-frame" title="Selected task"></iframe>`;
+      document.querySelector("main").append(activeViewer);
+      document.getElementById("task-viewer-close").addEventListener("click", () => {
+        document.getElementById("task-frame").removeAttribute("src");
+        activeViewer.hidden = true;
+      });
+    }
+    document.getElementById("task-viewer-title").textContent = label;
+    document.getElementById("task-frame").src = path.split("/").map(encodeURIComponent).join("/");
+    activeViewer.hidden = false;
+    activeViewer.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   weekList.replaceChildren();
   let total = 0;
-
   for (const section of projects) {
     const details = document.createElement("details");
     const summary = document.createElement("summary");
@@ -69,19 +112,14 @@
     summary.querySelector(".week-title").textContent = section.title;
     summary.querySelector(".week-count").textContent = `${section.files.length} ${section.files.length === 1 ? "project" : "projects"}`;
     taskGrid.className = "task-grid";
-
     for (const [label, path] of section.files) {
       const link = document.createElement("a");
       link.className = "task-link";
       link.href = path.split("/").map(encodeURIComponent).join("/");
       link.textContent = label;
-      link.addEventListener("click", event => {
-        event.preventDefault();
-        openTask(label, path);
-      });
+      link.addEventListener("click", event => { event.preventDefault(); openTask(label, path); });
       taskGrid.append(link);
     }
-
     details.append(summary, taskGrid);
     weekList.append(details);
     total += section.files.length;
@@ -95,7 +133,6 @@
     const query = searchInput.value.trim().toLowerCase();
     let visibleWeeks = 0;
     let visibleProjects = 0;
-
     for (const week of weekList.querySelectorAll("[data-week]")) {
       const weekMatches = week.querySelector(".week-title").textContent.toLowerCase().includes(query);
       let matchingProjects = 0;
@@ -111,7 +148,6 @@
         if (query) week.open = true;
       } else if (query) week.open = false;
     }
-
     resultCount.textContent = `${visibleProjects} projects · ${visibleWeeks} weeks`;
     emptyState.textContent = "No matching projects. Try a different search.";
     emptyState.style.display = visibleProjects ? "none" : "block";
