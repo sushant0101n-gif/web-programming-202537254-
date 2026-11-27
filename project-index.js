@@ -26,7 +26,7 @@
     return "Student Profile Editor";
   }
   if (normalizedPath === "week13_1/bio-field/dist/index.html") {
-  return "BioField";
+  return "Live Character Counter";
 }
     const week12Labels = {
       "week12/dist/index.html": "Shopping Cart",
