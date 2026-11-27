@@ -1,8 +1,7 @@
 (() => {
   const owner = "sushant0101n-gif";
   const repository = "web-programming-202537254-";
-  const branch = "main";
-  const weekFolderPattern = /^week[_-]?(\d+)(?:[_-](\d+))?$/i;
+  const weekFolderPattern = /^week[_-]?\d+(?:[_-]\d+)?$/i;
 
   const weekList = document.querySelector("#week-list");
   const searchInput = document.querySelector("#project-search");
@@ -13,25 +12,18 @@
   weekList.replaceChildren();
   weekList.hidden = true;
   searchInput.disabled = true;
-  emptyState.textContent = "Loading projects from GitHub...";
+  emptyState.textContent = "Loading projects...";
   emptyState.style.display = "block";
   resultCount.textContent = "Loading projects...";
 
   function parseTaskLabel(fileName, path = "") {
     const normalizedPath = path.toLowerCase();
-    if (normalizedPath === "week13_1/course-feedback-form/dist/index.html") {
-  return "Course Feedback Form";
-}
-      if (normalizedPath === "week13_1/student-profile-editor/dist/index.html") {
-    return "Student Profile Editor";
-  }
-  if (normalizedPath === "week13_1/bio-field/dist/index.html") {
-  return "Live Character Counter";
-}
-if (normalizedPath === "week13_1/contact-form-with-validation/dist/index.html") {
-  return "Contact Form with Validation";
-}
-    const week12Labels = {
+
+    const labels = {
+      "week13_1/course-feedback-form/dist/index.html": "Course Feedback Form",
+      "week13_1/student-profile-editor/dist/index.html": "Student Profile Editor",
+      "week13_1/bio-field/dist/index.html": "Live Character Counter",
+      "week13_1/contact-form-with-validation/dist/index.html": "Contact Form with Validation",
       "week12/dist/index.html": "Shopping Cart",
       "week12/toogle visibility.html": "Exercise 1 — Toggle visibility",
       "week12/add remove item.html": "Exercise 2 — Add & remove items from a list",
@@ -40,7 +32,8 @@ if (normalizedPath === "week13_1/contact-form-with-validation/dist/index.html") 
       "week12_2/weather-dashboard/dist/index.html": "Weather Dashboard",
       "week12_2/counter with history.html": "Counter with History"
     };
-    if (week12Labels[normalizedPath]) return week12Labels[normalizedPath];
+
+    if (labels[normalizedPath]) return labels[normalizedPath];
 
     const name = fileName.replace(/\.[^.]+$/, "");
     const taskMatch = name.match(/^task\s*(\d+)/i);
@@ -59,17 +52,19 @@ if (normalizedPath === "week13_1/contact-form-with-validation/dist/index.html") 
 
   function makeWeek(folder, files) {
     const match = folder.match(weekFolderPattern);
+    if (!match) return null;
+
     const number = Number(match[1]);
     const part = match[2] ? Number(match[2]) : null;
     const code = String(number).padStart(2, "0");
     const displayCode = part && number >= 2 && number <= 3
       ? `${code}${String.fromCharCode(64 + part)}`
       : code;
+
     const title = `Week ${number}${part ? ` · Part ${part}` : ""}`;
     const details = document.createElement("details");
     const summary = document.createElement("summary");
     const taskGrid = document.createElement("div");
-    const count = files.length;
 
     details.className = "week";
     details.dataset.week = "";
@@ -82,7 +77,7 @@ if (normalizedPath === "week13_1/contact-form-with-validation/dist/index.html") 
     summary.querySelector(".week-number").textContent = displayCode;
     summary.querySelector(".week-title").textContent = title;
     summary.querySelector(".week-count").textContent =
-      `${count} ${count === 1 ? "project" : "projects"}`;
+      `${files.length} ${files.length === 1 ? "project" : "projects"}`;
     taskGrid.className = "task-grid";
 
     for (const path of files) {
@@ -92,22 +87,14 @@ if (normalizedPath === "week13_1/contact-form-with-validation/dist/index.html") 
       const linkPath = path.split("/").map(encodeURIComponent).join("/");
 
       link.className = "task-link";
-   link.href = path.startsWith("week13_1/contact-form-with-validation/dist/")
-  ? `https://${owner}.github.io/${repository}/${linkPath}`
-  : path.startsWith("week13_1/bio-field/dist/")
-    ? `https://${owner}.github.io/${repository}/${linkPath}`
-    : path.startsWith("week13_1/course-feedback-form/dist/")
-      ? `https://${owner}.github.io/${repository}/${linkPath}`
-      : path.startsWith("week13_1/student-profile-editor/dist/")
-        ? `https://${owner}.github.io/${repository}/${linkPath}`
-        : linkPath;
+      link.href = linkPath;
       label.textContent = parseTaskLabel(fileName, path);
       link.append(label);
       taskGrid.append(link);
     }
 
     details.append(summary, taskGrid);
-    return { details, number, part: part ?? 0, count };
+    return { details, number, part: part ?? 0, count: files.length };
   }
 
   function filterProjects() {
@@ -120,7 +107,7 @@ if (normalizedPath === "week13_1/contact-form-with-validation/dist/index.html") 
       let matchingProjects = 0;
 
       for (const link of week.querySelectorAll(".task-link")) {
-        const matches = !query || weekMatches || link.textContent.toLowerCase().includes(query);
+        const matches = !query || weekMatches || link.textContent.toLowerableCase().includes(query);
         link.hidden = !matches;
         if (matches) matchingProjects++;
       }
@@ -142,7 +129,7 @@ if (normalizedPath === "week13_1/contact-form-with-validation/dist/index.html") 
 
   async function loadProjects() {
     try {
-      const url = `https://api.github.com/repos/${owner}/${repository}/git/trees/${branch}?recursive=1`;
+      const url = `https://api.github.com/repos/${owner}/${repository}/contents?ref=main&per_page=100`;
       const response = await fetch(url, {
         headers: { Accept: "application/vnd.github+json" },
         cache: "no-store"
@@ -150,52 +137,70 @@ if (normalizedPath === "week13_1/contact-form-with-validation/dist/index.html") 
 
       if (!response.ok) throw new Error(`GitHub returned HTTP ${response.status}`);
 
-      const data = await response.json();
-      if (!Array.isArray(data.tree)) throw new Error("GitHub returned an invalid repository file list");
+      const rootEntries = await response.json();
+      if (!Array.isArray(rootEntries)) throw new Error("Invalid GitHub directory response");
 
       const filesByWeek = new Map();
-      for (const item of data.tree) {
-        if (item.type !== "blob" || !/\.html$/i.test(item.path)) continue;
-        const [folder, ...filePath] = item.path.split("/");
-        if (filePath.length === 0 || !weekFolderPattern.test(folder)) continue;
 
-        const relativePath = filePath.join("/");
-        const normalizedRelativePath = relativePath.toLowerCase();
-        const isWeek12 = folder.toLowerCase() === "week12";
-        const isWeek12_2 = folder.toLowerCase() === "week12_2";
-const isWeek13_1 = folder.toLowerCase() === "week13_1";
+      async function scanDirectory(path, depth = 0) {
+        if (depth > 4) return;
 
-if (isWeek13_1 && normalizedRelativePath === "student-profile-editor/index.html") {
-  continue;
-}if (isWeek13_1 && normalizedRelativePath === "course-feedback-form/index.html") {
-  continue;
-}
-if (isWeek13_1 && normalizedRelativePath === "bio-field/index.html") {
-  continue;
-}
-if (normalizedPath === "week13_1/contact-form-with-validation/dist/index.html") {
-  return "Contact Form with Validation";
-}
-        if (isWeek12 && normalizedRelativePath === "index.html") continue;
+        const directoryUrl = `https://api.github.com/repos/${owner}/${repository}/contents/${path.split("/").map(encodeURIComponent).join("/")}?ref=main&per_page=100`;
+        const directoryResponse = await fetch(directoryUrl, {
+          headers: { Accept: "application/vnd.github+json" },
+          cache: "no-store"
+        });
 
-        if (isWeek12_2) {
-          const isDirectProjectPage = filePath.length === 1
-            && normalizedRelativePath !== "index.html";
-          const isBuiltWeek12_2Page = normalizedRelativePath === "dist/index.html"
-            || normalizedRelativePath === "weather-dashboard/dist/index.html";
-          // Show direct exercise pages and built apps, but hide source index pages and nested source files.
-          if (!isDirectProjectPage && !isBuiltWeek12_2Page) continue;
-        } else if (isWeek12) {
-          const isBuiltShoppingCart = normalizedRelativePath === "dist/index.html";
-          if (filePath.length > 1 && !isBuiltShoppingCart) continue;
+        if (!directoryResponse.ok) throw new Error(`GitHub returned HTTP ${directoryResponse.status}`);
+        const entries = await directoryResponse.json();
+        if (!Array.isArray(entries)) return;
+
+        for (const entry of entries) {
+          if (entry.type === "dir") {
+            await scanDirectory(entry.path, depth + 1);
+          } else if (entry.type === "file" && /\.html$/i.test(entry.name)) {
+            const [folder, ...fileParts] = entry.path.split("/");
+            if (!weekFolderPattern.test(folder) || fileParts.length === 0) continue;
+
+            const relativePath = fileParts.join("/").toLowerCase();
+            const folderLower = folder.toLowerCase();
+
+            if (folderLower === "week12" && relativePath === "index.html") continue;
+            if (folderLower === "week12_2" && relativePath === "index.html") continue;
+
+            if (folderLower === "week13_1") {
+              if (/^\/(?)/.test("")) continue;
+              if (!relativePath.includes("/dist/index.html") && relativePath !== "dist/index.html") continue;
+              if (relativePath === "index.html") continue;
+            }
+
+            if (folderLower === "week12") {
+              if (fileParts.length > 1 && relativePath !== "dist/index.html") continue;
+            }
+
+            if (folderLower === "week12_2") {
+              const isDirectProject = fileParts.length === 1;
+              const isBuiltProject = relativePath === "dist/index.html" || relativePath === "weather-dashboard/dist/index.html";
+              if (!isDirectProject && !isBuiltProject) continue;
+            }
+
+            if (!filesByWeek.has(folder)) filesByWeek.set(folder, []);
+            filesByWeek.get(folder).push(entry.path);
+          }
         }
+      }
 
-        if (!filesByWeek.has(folder)) filesByWeek.set(folder, []);
-        filesByWeek.get(folder).push(item.path);
+      const weekDirectories = rootEntries.filter((entry) =>
+        entry.type === "dir" && weekFolderPattern.test(entry.name)
+      );
+
+      for (const directory of weekDirectories) {
+        await scanDirectory(directory.path);
       }
 
       const weeks = [...filesByWeek.entries()]
         .map(([folder, files]) => makeWeek(folder, files.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))))
+        .filter(Boolean)
         .sort((a, b) => a.number - b.number || a.part - b.part);
 
       weekList.replaceChildren(...weeks.map((week) => week.details));
