@@ -9,8 +9,9 @@
 
   function taskLabel(path) {
     const parts = path.split("/");
-    const name = parts[parts.length - 1].toLowerCase() === "index.html"
-      ? parts[parts.length - 2]
+    const isIndex = parts[parts.length - 1].toLowerCase() === "index.html";
+    const name = isIndex
+      ? (parts[parts.length - 2].toLowerCase() === "dist" ? parts[parts.length - 3] : parts[parts.length - 2])
       : parts[parts.length - 1].replace(/\.html?$/i, "");
     return name.replace(/[-_]+/g, " ").replace(/\s+/g, " ").trim()
       .replace(/\b\w/g, character => character.toUpperCase());
@@ -61,7 +62,7 @@
       if (!match) continue;
 
       const isDirectHtml = parts.length === 2 && /\.html?$/i.test(parts[1]);
-      const isBuiltTask = parts.length === 4 && parts[2].toLowerCase() === "dist" && parts[3].toLowerCase() === "index.html";
+      const isBuiltTask = parts.length >= 4 && parts[parts.length - 2].toLowerCase() === "dist" && parts[parts.length - 1].toLowerCase() === "index.html";
       if (!isDirectHtml && !isBuiltTask) continue;
 
       const number = Number(match[1]);
