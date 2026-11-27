@@ -1,0 +1,99 @@
+
+.bio-container {
+  width: 100%;
+  max-width: 550px;
+  margin: 30px auto;
+  padding: 30px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.bio-header h2 {
+  margin-bottom: 8px;
+  color: #1e293b;
+}
+
+.bio-header p {
+  margin-bottom: 25px;
+  color: #64748b;
+}
+
+.bio-field label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: bold;
+  color: #334155;
+}
+
+.bio-field textarea {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 15px;
+  font-family: Arial, sans-serif;
+  resize: vertical;
+  outline: none;
+}
+
+.bio-field textarea:focus {
+  border-color: #2563eb;
+}
+
+.bio-field textarea:disabled {
+  background: #f1f5f9;
+  cursor: not-allowed;
+}
+
+.bio-footer {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+  font-size: 13px;
+}
+
+.bio-footer p {
+  margin: 0;
+}
+
+.bio-footer span {
+  color: #64748b;
+}
+
+.normal {
+  color: #64748b;
+}
+
+.warning {
+  color: #dc2626;
+  font-weight: bold;
+}
+
+.bio-field button {
+  margin-top: 18px;
+  padding: 11px 20px;
+  border: none;
+  border-radius: 6px;
+  background: #2563eb;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.bio-field button:hover:not(:disabled) {
+  background: #1d4ed8;
+}
+
+.bio-field button:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+}
+
+@media (max-width: 600px) {
+  .bio-container {
+    padding: 22px;
+  }
+}
