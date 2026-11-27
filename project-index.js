@@ -1,5 +1,5 @@
 
-// Static project index: no GitHub API calls, so it works reliably on GitHub Pages.
+
 (() => {
   const weekList = document.querySelector("#week-list");
   const searchInput = document.querySelector("#project-search");
@@ -43,18 +43,25 @@
       ["Task 3", "week4_1/task3.html"], ["Task 4", "week4_1/task4.html"]
     ]},
     { week: 5, title: "Week 5", files: [
-      ["Counter", "week5/counter.html"], ["Grade Calculator", "week5/grade calculator.html"],
+      ["Counter", "week5/counter.html"],
+      ["Grade Calculator", "week5/grade calculator.html"],
       ["Loops", "week5/loops.html"]
     ]},
     { week: 6, title: "Week 6", files: [
-      ["Blog fetcher", "Week_6/Blog fetcher.html"], ["Country explorer", "Week_6/country explorer.html"],
-      ["Joke fetcher", "Week_6/joke fetcher.html"], ["Pokemon explorer", "Week_6/pokemon explorer.html"],
-      ["Random profile generator", "Week_6/random profile generator.html"], ["Seoul weather", "Week_6/seoul weather.html"]
+      ["Blog fetcher", "Week_6/Blog fetcher.html"],
+      ["Country explorer", "Week_6/country explorer.html"],
+      ["Joke fetcher", "Week_6/joke fetcher.html"],
+      ["Pokemon explorer", "Week_6/pokemon explorer.html"],
+      ["Random profile generator", "Week_6/random profile generator.html"],
+      ["Seoul weather", "Week_6/seoul weather.html"]
     ]},
     { week: 7, title: "Week 7", files: [
-      ["Book search", "week7/book search.html"], ["Step 1", "week7/step1.html"],
-      ["Step 2", "week7/step2.html"], ["Step 3", "week7/step3.html"],
-      ["Step 4", "week7/step4.html"], ["Step 5", "week7/step 5.html"],
+      ["Book search", "week7/book search.html"],
+      ["Step 1", "week7/step1.html"],
+      ["Step 2", "week7/step2.html"],
+      ["Step 3", "week7/step3.html"],
+      ["Step 4", "week7/step4.html"],
+      ["Step 5", "week7/step 5.html"],
       ["Step 6", "week7/step6.html"]
     ]},
     { week: 8, title: "Week 8 · Part 1", code: "08A", files: [
@@ -64,14 +71,17 @@
       ["Login form", "week8_1/login form.html"]
     ]},
     { week: 8, title: "Week 8 · Part 2", code: "08B", files: [
-      ["C1", "week8_2/C1.html"], ["E1", "week8_2/E1.html"],
-      ["E2", "week8_2/E2.html"], ["E3", "week8_2/E3.html"],
+      ["C1", "week8_2/C1.html"],
+      ["E1", "week8_2/E1.html"],
+      ["E2", "week8_2/E2.html"],
+      ["E3", "week8_2/E3.html"],
       ["Upgraded registration form", "week8_2/Upgraded Registration form.html"],
       ["C2", "week8_2/c2.html"]
     ]},
     { week: 9, title: "Week 9 · Part 1", code: "09A", files: [
       ["Accessibility audit report", "week9_1/Accessibility Audit Report.html"],
-      ["Alt text", "week9_1/Alt text.html"], ["Div button", "week9_1/div button.html"],
+      ["Alt text", "week9_1/Alt text.html"],
+      ["Div button", "week9_1/div button.html"],
       ["Lighthouse fix", "week9_1/lighthouse fix.html"]
     ]},
     { week: 9, title: "Week 9 · Part 2", code: "09B", files: [
@@ -81,7 +91,8 @@
       ["Performance test page", "week9_2/performance test page.html"]
     ]},
     { week: 10, title: "Week 10 · Part 1", code: "10A", files: [
-      ["Task 1", "week10_1/task1.html"], ["Task 2", "week10_1/task2.html"]
+      ["Task 1", "week10_1/task1.html"],
+      ["Task 2", "week10_1/task2.html"]
     ]},
     { week: 10, title: "Week 10 · Part 2", code: "10B", files: [
       ["Book search", "week10_2/book-search.html"]
@@ -117,10 +128,21 @@
       ["Live character counter", "week13_1/bio-field/dist/index.html"],
       ["Contact form with validation", "week13_1/contact-form-with-validation/dist/index.html"],
       ["Skill Checklist with Counter", "week13_1/skill-checklist-with-counter/dist/index.html"]
-    ]}
+    ]},
+
+    // Separate personal projects section
+    {
+      week: "extra",
+      title: "Personal Projects",
+      code: "EXTRA",
+      files: [
+        ["My Personal Portfolio", "https://sushant0101n-gif.github.io/portfolio/"]
+      ]
+    }
   ];
 
   weekList.replaceChildren();
+
   let total = 0;
 
   for (const section of projects) {
@@ -130,60 +152,103 @@
 
     details.className = "week";
     details.dataset.week = "";
-    summary.innerHTML = `<span class="week-number"></span><span class="week-title"></span><span class="week-count"></span><span class="chevron" aria-hidden="true"></span>`;
-    summary.querySelector(".week-number").textContent = section.code || String(section.week).padStart(2, "0");
+
+    summary.innerHTML = `
+      <span class="week-number"></span>
+      <span class="week-title"></span>
+      <span class="week-count"></span>
+      <span class="chevron" aria-hidden="true"></span>
+    `;
+
+    summary.querySelector(".week-number").textContent =
+      section.code || String(section.week).padStart(2, "0");
+
     summary.querySelector(".week-title").textContent = section.title;
-    summary.querySelector(".week-count").textContent = `${section.files.length} ${section.files.length === 1 ? "project" : "projects"}`;
+
+    summary.querySelector(".week-count").textContent =
+      `${section.files.length} ${section.files.length === 1 ? "project" : "projects"}`;
+
     taskGrid.className = "task-grid";
 
     for (const [label, path] of section.files) {
       const link = document.createElement("a");
+
       link.className = "task-link";
-      link.href = path.split("/").map(encodeURIComponent).join("/");
       link.textContent = label;
+
+      // Handle external and internal links
+      if (path.startsWith("https://") || path.startsWith("http://")) {
+        link.href = path;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+      } else {
+        link.href = path.split("/").map(encodeURIComponent).join("/");
+      }
+
       taskGrid.append(link);
     }
 
     details.append(summary, taskGrid);
     weekList.append(details);
+
     total += section.files.length;
   }
 
   weekList.hidden = false;
   emptyState.style.display = "none";
+
   footerTotal.textContent = `Project index · ${total} tasks`;
 
+  // Search and filter projects
   function filterProjects() {
     const query = searchInput.value.trim().toLowerCase();
+
     let visibleWeeks = 0;
     let visibleProjects = 0;
 
     for (const week of weekList.querySelectorAll("[data-week]")) {
-      const weekMatches = week.querySelector(".week-title").textContent.toLowerCase().includes(query);
+      const weekMatches = week
+        .querySelector(".week-title")
+        .textContent.toLowerCase()
+        .includes(query);
+
       let matchingProjects = 0;
 
       for (const link of week.querySelectorAll(".task-link")) {
-        const matches = !query || weekMatches || link.textContent.toLowerCase().includes(query);
+        const matches =
+          !query ||
+          weekMatches ||
+          link.textContent.toLowerCase().includes(query);
+
         link.hidden = !matches;
+
         if (matches) matchingProjects++;
       }
 
       week.hidden = matchingProjects === 0;
+
       if (matchingProjects > 0) {
         visibleWeeks++;
         visibleProjects += matchingProjects;
+
         if (query) week.open = true;
       } else if (query) {
         week.open = false;
       }
     }
 
-    resultCount.textContent = `${visibleProjects} projects · ${visibleWeeks} weeks`;
-    emptyState.textContent = "No matching projects. Try a different search.";
-    emptyState.style.display = visibleProjects ? "none" : "block";
+    resultCount.textContent =
+      `${visibleProjects} projects · ${visibleWeeks} weeks`;
+
+    emptyState.textContent =
+      "No matching projects. Try a different search.";
+
+    emptyState.style.display =
+      visibleProjects ? "none" : "block";
   }
 
   searchInput.disabled = false;
   searchInput.addEventListener("input", filterProjects);
+
   filterProjects();
 })();
