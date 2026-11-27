@@ -19,6 +19,9 @@
 
   function parseTaskLabel(fileName, path = "") {
     const normalizedPath = path.toLowerCase();
+      if (normalizedPath === "week13_1/student-profile-editor/dist/index.html") {
+    return "Student Profile Editor";
+  }
     const week12Labels = {
       "week12/dist/index.html": "Shopping Cart",
       "week12/toogle visibility.html": "Exercise 1 — Toggle visibility",
@@ -80,7 +83,9 @@
       const linkPath = path.split("/").map(encodeURIComponent).join("/");
 
       link.className = "task-link";
-      link.href = linkPath;
+      link.href = path.startsWith("week13_1/student-profile-editor/dist/")
+  ? `https://${owner}.github.io/${repository}/${linkPath}`
+  : linkPath;
       label.textContent = parseTaskLabel(fileName, path);
       link.append(label);
       taskGrid.append(link);
@@ -143,7 +148,11 @@
         const normalizedRelativePath = relativePath.toLowerCase();
         const isWeek12 = folder.toLowerCase() === "week12";
         const isWeek12_2 = folder.toLowerCase() === "week12_2";
+const isWeek13_1 = folder.toLowerCase() === "week13_1";
 
+if (isWeek13_1 && normalizedRelativePath === "student-profile-editor/index.html") {
+  continue;
+}
         if (isWeek12 && normalizedRelativePath === "index.html") continue;
 
         if (isWeek12_2) {
