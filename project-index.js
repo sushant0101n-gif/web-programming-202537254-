@@ -1,4 +1,4 @@
-// Static project index so GitHub Pages does not depend on the GitHub API.
+// Static project index: no GitHub API calls, so it works reliably on GitHub Pages.
 (() => {
   const weekList = document.querySelector("#week-list");
   const searchInput = document.querySelector("#project-search");
@@ -53,13 +53,68 @@
     { week: 7, title: "Week 7", files: [
       ["Book search", "week7/book search.html"], ["Step 1", "week7/step1.html"],
       ["Step 2", "week7/step2.html"], ["Step 3", "week7/step3.html"],
-      ["Step 4", "week7/step4.html"], ["Step 5", "week7/step 5.html"], ["Step 6", "week7/step6.html"]
+      ["Step 4", "week7/step4.html"], ["Step 5", "week7/step 5.html"],
+      ["Step 6", "week7/step6.html"]
     ]},
-    { week: 8, title: "Week 8 · Part 1", code: "08", files: [
-      ["React Project", "week8_1/dist/index.html"]
+    { week: 8, title: "Week 8 · Part 1", code: "08A", files: [
+      ["Add valid attributes", "week8_1/E2 Addind valid attributes.html"],
+      ["Add CSS", "week8_1/E3 adding css.html"],
+      ["Student registration", "week8_1/Student registration.html"],
+      ["Login form", "week8_1/login form.html"]
     ]},
-    { week: 8, title: "Week 8 · Part 2", code: "08", files: [
-      ["React Project", "week8_2/dist/index.html"]
+    { week: 8, title: "Week 8 · Part 2", code: "08B", files: [
+      ["C1", "week8_2/C1.html"], ["E1", "week8_2/E1.html"],
+      ["E2", "week8_2/E2.html"], ["E3", "week8_2/E3.html"],
+      ["Upgraded registration form", "week8_2/Upgraded Registration form.html"],
+      ["C2", "week8_2/c2.html"]
+    ]},
+    { week: 9, title: "Week 9 · Part 1", code: "09A", files: [
+      ["Accessibility audit report", "week9_1/Accessibility Audit Report.html"],
+      ["Alt text", "week9_1/Alt text.html"], ["Div button", "week9_1/div button.html"],
+      ["Lighthouse fix", "week9_1/lighthouse fix.html"]
+    ]},
+    { week: 9, title: "Week 9 · Part 2", code: "09B", files: [
+      ["Adding defer", "week9_2/adding defer.html"],
+      ["Comparing image format", "week9_2/comparing image format.html"],
+      ["Performance report", "week9_2/performance report.html"],
+      ["Performance test page", "week9_2/performance test page.html"]
+    ]},
+    { week: 10, title: "Week 10 · Part 1", code: "10A", files: [
+      ["Task 1", "week10_1/task1.html"], ["Task 2", "week10_1/task2.html"]
+    ]},
+    { week: 10, title: "Week 10 · Part 2", code: "10B", files: [
+      ["Book search", "week10_2/book-search.html"]
+    ]},
+    { week: 11, title: "Week 11 · Part 1", code: "11A", files: [
+      ["Card component", "week11_1/CardComponen.html"],
+      ["Notification list", "week11_1/NotificationList.html"],
+      ["Profile card component", "week11_1/profile card component.html"],
+      ["Student profile card", "week11_1/student profile card.html"]
+    ]},
+    { week: 11, title: "Week 11 · Part 2", code: "11B", files: [
+      ["Conditional rendering", "week11_2/conditional rendering.html"],
+      ["Course catalog", "week11_2/course catalog.html"],
+      ["Product card", "week11_2/product card.html"]
+    ]},
+    { week: 12, title: "Week 12", files: [
+      ["Shopping cart", "week12/dist/index.html"],
+      ["Toggle visibility", "week12/toogle visibility.html"],
+      ["Add & remove items", "week12/add remove item.html"],
+      ["Lift state between counters", "week12/lift state between 2 counter.html"]
+    ]},
+    { week: 12, title: "Week 12 · Part 2", code: "12B", files: [
+      ["GitHub user lookup", "week12_2/dist/index.html"],
+      ["Weather dashboard", "week12_2/weather-dashboard/dist/index.html"],
+      ["Counter with history", "week12_2/counter with history.html"],
+      ["Page title sync", "week12_2/page title sync.html"],
+      ["React stopwatch", "week12_2/react stopwatch.html"],
+      ["User profile fetch", "week12_2/user profile fetch.html"]
+    ]},
+    { week: 13, title: "Week 13 · Part 1", code: "13A", files: [
+      ["Course feedback form", "week13_1/course-feedback-form/dist/index.html"],
+      ["Student profile editor", "week13_1/student-profile-editor/dist/index.html"],
+      ["Live character counter", "week13_1/bio-field/dist/index.html"],
+      ["Contact form with validation", "week13_1/contact-form-with-validation/dist/index.html"]
     ]}
   ];
 
@@ -74,7 +129,6 @@
     details.className = "week";
     details.dataset.week = "";
     summary.innerHTML = `<span class="week-number"></span><span class="week-title"></span><span class="week-count"></span><span class="chevron" aria-hidden="true"></span>`;
-
     summary.querySelector(".week-number").textContent = section.code || String(section.week).padStart(2, "0");
     summary.querySelector(".week-title").textContent = section.title;
     summary.querySelector(".week-count").textContent = `${section.files.length} ${section.files.length === 1 ? "project" : "projects"}`;
@@ -117,10 +171,13 @@
         visibleWeeks++;
         visibleProjects += matchingProjects;
         if (query) week.open = true;
+      } else if (query) {
+        week.open = false;
       }
     }
 
     resultCount.textContent = `${visibleProjects} projects · ${visibleWeeks} weeks`;
+    emptyState.textContent = "No matching projects. Try a different search.";
     emptyState.style.display = visibleProjects ? "none" : "block";
   }
 
