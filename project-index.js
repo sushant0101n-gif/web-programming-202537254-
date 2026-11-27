@@ -58,19 +58,13 @@
     for (const item of result.tree) {
       if (item.type !== "blob") continue;
       const parts = item.path.split("/");
-      const match = parts[0].match(/^week[_-]?(\d+)(?:[_-](\d+))?$/i);
+      const match = parts[0].match(/^week[_-]?(-?\d+)(?:[_-](\d+))?$/i);
       if (!match) continue;
 
       const isDirectHtml = parts.length === 2 && /\.html?$/i.test(parts[1]);
       const isBuiltTask = parts.length >= 4
         && parts[parts.length - 2].toLowerCase() === "dist"
         && parts[parts.length - 1].toLowerCase() === "index.html";
-
-      // Hide the React source index file (week12_2/index.html). Only display
-      // standalone HTML assignments and the built dist/index.html app entry.
-      const isReactSourceIndex = parts.length === 2
-        && parts[1].toLowerCase() === "index.html";
-      if (isReactSourceIndex) continue;
 
       if (!isDirectHtml && !isBuiltTask) continue;
 
@@ -110,7 +104,6 @@
           link.className = "task-link";
           link.href = path.split("/").map(encodeURIComponent).join("/");
           link.textContent = label;
-          // Intentionally do not intercept clicks: the task opens as a page.
           taskGrid.append(link);
         }
         details.append(summary, taskGrid);
@@ -120,7 +113,6 @@
       footerTotal.textContent = `Project index · ${total} tasks`;
     }
   } catch (error) {
-    // Keep the index's built-in links available if the GitHub API is unavailable.
     console.warn("Could not load the complete task list; showing saved tasks.", error);
   }
 
