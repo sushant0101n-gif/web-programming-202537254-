@@ -1,7 +1,7 @@
 (() => {
   const owner = "sushant0101n-gif";
   const repository = "web-programming-202537254-";
-  const weekFolderPattern = /^week[_-]?\d+(?:[_-]\d+)?$/i;
+  const weekFolderPattern = /^week[_-]?(\d+)(?:[_-](\d+))?$/i;
 
   const weekList = document.querySelector("#week-list");
   const searchInput = document.querySelector("#project-search");
@@ -107,7 +107,7 @@
       let matchingProjects = 0;
 
       for (const link of week.querySelectorAll(".task-link")) {
-        const matches = !query || weekMatches || link.textContent.toLowerableCase().includes(query);
+        const matches = !query || weekMatches || link.textContent.toLowerCase().includes(query);
         link.hidden = !matches;
         if (matches) matchingProjects++;
       }
@@ -169,7 +169,6 @@
             if (folderLower === "week12_2" && relativePath === "index.html") continue;
 
             if (folderLower === "week13_1") {
-              if (/^\/(?)/.test("")) continue;
               if (!relativePath.includes("/dist/index.html") && relativePath !== "dist/index.html") continue;
               if (relativePath === "index.html") continue;
             }
