@@ -123,6 +123,7 @@
       ["User profile fetch", "week12_2/user profile fetch.html"]
     ]},
     { week: 13, title: "Week 13 · Part 1", code: "13A", files: [
+      ["Multi-Step Registration", "week13_1/Multi-Step Registration.html"],
       ["Course feedback form", "week13_1/course-feedback-form/dist/index.html"],
       ["Student profile editor", "week13_1/student-profile-editor/dist/index.html"],
       ["Live character counter", "week13_1/bio-field/dist/index.html"],
