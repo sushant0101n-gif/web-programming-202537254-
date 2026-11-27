@@ -111,11 +111,12 @@
       ["User profile fetch", "week12_2/user profile fetch.html"]
     ]},
     { week: 13, title: "Week 13 · Part 1", code: "13A", files: [
-      ["Course feedback form", "week13_1/course-feedback-form/dist/index.html"],
-      ["Student profile editor", "week13_1/student-profile-editor/dist/index.html"],
-      ["Live character counter", "week13_1/bio-field/dist/index.html"],
-      ["Contact form with validation", "week13_1/contact-form-with-validation/dist/index.html"]
-    ]}
+  ["Course feedback form", "week13_1/course-feedback-form/dist/index.html"],
+  ["Student profile editor", "week13_1/student-profile-editor/dist/index.html"],
+  ["Live character counter", "week13_1/bio-field/dist/index.html"],
+  ["Contact form with validation", "week13_1/contact-form-with-validation/dist/index.html"],
+  ["Skill Checklist with Counter", "week13_1/skill-checklist-with-counter/dist/index.html"]
+]}
   ];
 
   weekList.replaceChildren();
