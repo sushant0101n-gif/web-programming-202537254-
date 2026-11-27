@@ -1,0 +1,103 @@
+
+.contact-container {
+  width: 100%;
+  max-width: 550px;
+  margin: 30px auto;
+  padding: 35px;
+  background: white;
+  border-radius: 14px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+}
+
+.contact-container h2 {
+  color: #1e293b;
+  margin-bottom: 8px;
+  font-size: 26px;
+}
+
+.description {
+  color: #64748b;
+  margin-bottom: 28px;
+}
+
+.form-group {
+  margin-bottom: 22px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 9px;
+  font-weight: bold;
+  color: #334155;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 13px;
+  border: 1px solid #cbd5e1;
+  border-radius: 7px;
+  font-size: 15px;
+  font-family: Arial, sans-serif;
+  outline: none;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: #2563eb;
+}
+
+.form-group textarea {
+  resize: vertical;
+}
+
+.error {
+  color: #dc2626;
+  font-size: 13px;
+  margin-top: 7px;
+}
+
+.contact-container button,
+.success-message button {
+  width: 100%;
+  padding: 13px;
+  border: none;
+  border-radius: 7px;
+  background: #2563eb;
+  color: white;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.contact-container button:hover,
+.success-message button:hover {
+  background: #1d4ed8;
+}
+
+.success-message {
+  width: 100%;
+  max-width: 550px;
+  margin: 30px auto;
+  padding: 40px 30px;
+  background: white;
+  border-radius: 14px;
+  text-align: center;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+}
+
+.success-message h2 {
+  color: #16a34a;
+  margin-bottom: 12px;
+}
+
+.success-message p {
+  color: #64748b;
+  margin-bottom: 25px;
+}
+
+@media (max-width: 600px) {
+  .contact-container {
+    padding: 23px;
+  }
+}
