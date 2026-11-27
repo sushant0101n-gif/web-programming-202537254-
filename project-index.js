@@ -62,7 +62,16 @@
       if (!match) continue;
 
       const isDirectHtml = parts.length === 2 && /\.html?$/i.test(parts[1]);
-      const isBuiltTask = parts.length >= 4 && parts[parts.length - 2].toLowerCase() === "dist" && parts[parts.length - 1].toLowerCase() === "index.html";
+      const isBuiltTask = parts.length >= 4
+        && parts[parts.length - 2].toLowerCase() === "dist"
+        && parts[parts.length - 1].toLowerCase() === "index.html";
+
+      // Hide the React source index file (week12_2/index.html). Only display
+      // standalone HTML assignments and the built dist/index.html app entry.
+      const isReactSourceIndex = parts.length === 2
+        && parts[1].toLowerCase() === "index.html";
+      if (isReactSourceIndex) continue;
+
       if (!isDirectHtml && !isBuiltTask) continue;
 
       const number = Number(match[1]);
