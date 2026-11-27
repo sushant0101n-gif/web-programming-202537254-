@@ -29,7 +29,7 @@ function BioField() {
       </div>
 
       <div className="bio-field">
-        <label htmlFor="bio">Your Bio</label>
+        <label htmlFor="bio">Live character counter</label>
 
         <textarea
           id="bio"
